@@ -135,6 +135,6 @@ app.get(["/", "/run/*", "/edit/*", "/results/*"], function (req, res, next) {
 
 app.use(express.static(__dirname + "/public"));
 
-app.listen(process.env.PORT || 3000, function () {
+app.listen(process.env.PORT || 3040, function () {
   console.log("Listening!");
 });
