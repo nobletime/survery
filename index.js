@@ -38,7 +38,7 @@ app.get("/qrcode", (req, res, next) => {
 app.post("/scan", (req, res, next) => {
   const cid = req.body.cid;
   const pid = req.body.pid;
-  const base_url = "https://sleepgraph.azurewebsites.net";
+  const base_url = "https://airwayassessment.azurewebsites.net";
   const input_text = `${base_url}?cid=${cid}&pid=${pid}`;
 
   qrcode.toDataURL(input_text, (err, src) => {
