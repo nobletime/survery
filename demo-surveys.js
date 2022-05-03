@@ -860,12 +860,12 @@ var surveys = [
           "title": "How hard was it to complete this form?",
           "isRequired": true,
           "rateValues": [
-           1,
-           2,
-           3
+           'Easy',
+           'Average',
+           'Hard'
           ],
-          "minRateDescription": "Easy",
-          "maxRateDescription": "Difficult"
+          "minRateDescription": "",
+          "maxRateDescription": ""
          },
          {
           "type": "comment",

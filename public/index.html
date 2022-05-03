@@ -25,7 +25,14 @@ window.addEventListener("load", function(){
 if (params.has('cid')) {
     document.getElementById('cid').innerHTML =' Clinic ID: ' + params.get('cid')
     document.getElementById('pid').innerHTML =', Patient ID: ' +  params.get('pid')
-    document.getElementsByClassName("sjs-button").click();
+    setTimeout(()=>{
+        document.getElementsByClassName("sjs-button")[0].click();
+        document.querySelector(".sjs-client-app__header").style.display="none"; 
+    }, 300)
+  
+    document.getElementById("qrcode").style.display="none";
+   
+  //  window.top.location.href = "";
 }
 
 });
@@ -39,7 +46,7 @@ if (params.has('cid')) {
     </div>
     <div id="root"></div>
     
-     <a href="/qrcode">  <button style="position:absolute;left:60%;" type="submit" class="btn btn-primary">Generate QR Code</button></a>
+     <a href="/qrcode" id="qrcode">  <button style="position:absolute;left:60%;" type="submit" class="btn btn-primary">Generate QR Code</button></a>
     
 </body>
 
