@@ -99,7 +99,7 @@ app.post(apiBaseAddress + "/changeJson", function (req, res) {
   var json = req.body.json;
   db.storeSurvey(id, null, json, function (survey) {
     sendJsonResult(res, survey);
-  });
+  }); 
 });
 
 app.post(apiBaseAddress + "/post", function (req, res) {
