@@ -1,5 +1,5 @@
 var express = require("express");
-var bodyParser = require("body-parser");
+const fs = require("fs")
 var session = require("express-session");
 var dbadapter = require("./dbadapter");
 var inmemorydbadapter = require("./inmemorydbadapter");
@@ -28,8 +28,8 @@ app.use(express.urlencoded({ extended: false }));
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "view"));
-
-app.use(express.static("public"));
+app.use(express.static(__dirname + "/public"));
+//app.use(express.static("public"));
 
 app.get("/qrcode", (req, res, next) => {
   res.render("qrcode");
@@ -128,12 +128,11 @@ app.get(apiBaseAddress + "/results", function (req, res) {
 });
 
 app.get(["/", "/run/*", "/edit/*", "/results/*"], function (req, res, next) {
+//  res.send("<strong>Our records show that you have already completed this survey.</strong>")
   res.sendFile("index.html", { root: __dirname + "/public" });
 });
 
 
-
-app.use(express.static(__dirname + "/public"));
 
 app.listen(process.env.PORT || 3040, function () {
   console.log("Listening!");

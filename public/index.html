@@ -14,40 +14,57 @@
     <link href="/static/css/main.588da7e7.css" rel="stylesheet">
     <link href="/static/css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-<script>
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script>
 
-window.addEventListener("load", function(){
-    document.getElementsByClassName("sjs-client-app__header")[0].innerHTML ="";
+        window.addEventListener("load", function () {
+            document.getElementsByClassName("sjs-client-app__header")[0].innerHTML = "";
+            let donesurvery = false;
 
-    const params = new URLSearchParams(window.location.search)
+            const params = new URLSearchParams(window.location.search)
+            
+            if (params.has('cid')) {
+                document.getElementById('cid').innerHTML = ' Clinic ID: ' + params.get('cid')
+                document.getElementById('pid').innerHTML = ', Patient ID: ' + params.get('pid')
+                setTimeout(() => {
+                    if (!donesurvery){
+                    document.getElementsByClassName("sjs-button")[0].click();
+                    document.querySelector(".sjs-client-app__header").style.display = "none";
+                }
 
-if (params.has('cid')) {
-    document.getElementById('cid').innerHTML =' Clinic ID: ' + params.get('cid')
-    document.getElementById('pid').innerHTML =', Patient ID: ' +  params.get('pid')
-    setTimeout(()=>{
-        document.getElementsByClassName("sjs-button")[0].click();
-        document.querySelector(".sjs-client-app__header").style.display="none"; 
-    }, 300)
-  
-    document.getElementById("qrcode").style.display="none";
-   
-  //  window.top.location.href = "";
-}
+                    let submit = document.querySelector('.sd-btn.sd-btn--action.sd-navigation__complete-btn');
+                    if (submit) {
+                        document.querySelector('.sd-btn.sd-btn--action.sd-navigation__complete-btn').addEventListener('click', () => {
+                            localStorage.setItem('done-survey', `${params.get('cid')}-${params.get('pid')}`)
+                        })
+                    }
+                }, 300)
+                document.getElementById("qrcode").style.display = "none";
+            }
 
-});
+            if (localStorage.getItem('done-survey') != null) {
+                if (localStorage.getItem('done-survey') == `${params.get('cid')}-${params.get('pid')}`){
+                    document.getElementById("root").innerHTML = "<strong>Our records show that you have already completed this survey. </strong>";
+                    donesurvery = true;
+                }
+            }
 
-</script>
+            
+            //  window.top.location.href = "";
+        })
+
+    </script>
 </head>
 
 <body><noscript>You need to enable JavaScript to run this app.</noscript>
     <div>
-        <strong> <span id="cid"> </span>  <span id="pid"> </span></strong>
+        <strong> <span id="cid"> </span> <span id="pid"> </span></strong>
     </div>
     <div id="root"></div>
-    
-     <a href="/qrcode" id="qrcode">  <button style="position:absolute;left:60%;" type="submit" class="btn btn-primary">Generate QR Code</button></a>
-    
+
+    <a href="/qrcode" id="qrcode"> <button style="position:absolute;left:60%;" type="submit"
+            class="btn btn-primary">Generate QR Code</button></a>
+
 </body>
 
 </html>
