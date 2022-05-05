@@ -35,7 +35,13 @@
                     let submit = document.querySelector('.sd-btn.sd-btn--action.sd-navigation__complete-btn');
                     if (submit) {
                         document.querySelector('.sd-btn.sd-btn--action.sd-navigation__complete-btn').addEventListener('click', () => {
-                            localStorage.setItem('done-survey', `${params.get('cid')}-${params.get('pid')}`)
+                            localStorage.setItem('done-survey', `${params.get('cid')}-${params.get('pid')}`);
+
+                            setTimeout(()=>{
+                            let el = document.querySelector('.sd-body.sd-completedpage'); 
+                            el.innerHTML = el.innerHTML  + '<a href="#" onclick="window.close();"> <button style="" type="submit"  class="btn btn-primary">Close</button></a>'
+                            }, 300)
+
                         })
                     }
                 }, 300)
