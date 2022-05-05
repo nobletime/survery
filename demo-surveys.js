@@ -932,7 +932,7 @@ var surveys = [
          {
           "type": "comment",
           "name": "question6",
-          "visibleIf": "{question5} = 3",
+          "visibleIf": "{question5} = hard",
           "title": "If Difficult Why? "
          }
         ],
