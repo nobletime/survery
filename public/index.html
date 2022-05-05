@@ -15,6 +15,9 @@
     <link href="/static/css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
         integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.13/moment-timezone-with-data-2012-2022.min.js"></script>
     <script>
 
         window.addEventListener("load", function () {
@@ -22,20 +25,31 @@
             let donesurvery = false;
 
             const params = new URLSearchParams(window.location.search)
-            
+
             if (params.has('cid')) {
                 document.getElementById('cid').innerHTML = ' Clinic ID: ' + params.get('cid')
                 document.getElementById('pid').innerHTML = ', Patient ID: ' + params.get('pid')
-                setTimeout(() => {
-                    if (!donesurvery){
-                    document.getElementsByClassName("sjs-button")[0].click();
-                    document.querySelector(".sjs-client-app__header").style.display = "none";
-                }
+                document.getElementById('cdate').innerHTML = ', Date: ' + moment(new Date()).format('MM/DD/YYYY');
 
-                    let submit = document.querySelector('.sd-btn.sd-btn--action.sd-navigation__complete-btn');
-                    if (submit) {
-                        document.querySelector('.sd-btn.sd-btn--action.sd-navigation__complete-btn').addEventListener('click', () => {
-                            localStorage.setItem('done-survey', `${params.get('cid')}-${params.get('pid')}`);
+                setTimeout(() => {
+                    if (!donesurvery) {
+                        document.getElementsByClassName("sjs-button")[0].click();
+                        document.querySelector(".sjs-client-app__header").style.display = "none";
+                    }
+
+                    let next = document.querySelector('.sd-btn.sd-navigation__next-btn');
+                    if (next) {
+                        document.querySelector('.sd-btn.sd-navigation__next-btn').addEventListener('click', () => {
+
+                            setTimeout(() => {
+                                let submit = document.querySelector('.sd-btn.sd-btn--action.sd-navigation__complete-btn');
+                                if (submit) {
+                                    document.querySelector('.sd-btn.sd-btn--action.sd-navigation__complete-btn').addEventListener('click', () => {
+                                        localStorage.setItem('done-survey', `${params.get('cid')}-${params.get('pid')}`);
+
+                                    })
+                                }
+                            }, 300);
 
                             // setTimeout(()=>{
                             // let el = document.querySelector('.sd-body.sd-completedpage'); 
@@ -44,18 +58,19 @@
 
                         })
                     }
+
                 }, 300)
                 document.getElementById("qrcode").style.display = "none";
             }
 
             if (localStorage.getItem('done-survey') != null) {
-                if (localStorage.getItem('done-survey') == `${params.get('cid')}-${params.get('pid')}`){
+                if (localStorage.getItem('done-survey') == `${params.get('cid')}-${params.get('pid')}`) {
                     document.getElementById("root").innerHTML = "<strong>Our records show that you have already completed this survey. </strong>";
                     donesurvery = true;
                 }
             }
 
-            
+
             //  window.top.location.href = "";
         })
 
@@ -64,7 +79,7 @@
 
 <body><noscript>You need to enable JavaScript to run this app.</noscript>
     <div>
-        <strong> <span id="cid"> </span> <span id="pid"> </span></strong>
+        <strong> <span id="cid"> </span> <span id="pid"> </span><span id="cdate"> </span></strong>
     </div>
     <div id="root"></div>
 
