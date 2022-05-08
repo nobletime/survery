@@ -3,6 +3,7 @@ const fs = require("fs")
 var session = require("express-session");
 var dbadapter = require("./dbadapter");
 const mdb  = require("./db");
+const {send365Email} = require("./email");
 const { ObjectId } = require('mongodb');
 var inmemorydbadapter = require("./inmemorydbadapter");
 var apiBaseAddress = "/api";
@@ -77,8 +78,13 @@ let  firstKey = "", newvalues, query = "";
 
           templateTData.data = [obj];
           obj['DT_RowId'] = obj._id.toString();
-          res.send(JSON.stringify(templateTData))    
-
+          res.send(JSON.stringify(templateTData));
+       
+          let subject = "C-GASP Screener Service Registeration";
+          const pass = 'CsmaTraker1999';
+          const surveylink = `https://airwayassessment.azurewebsites.net/qrcode?cid=${obj.clinic_id}`
+          const body = `Your C-GASP Screener Service link to generate QR-Code and view survey results is below:<br/><a href="${surveylink}">${surveylink}</a>`;
+          await send365Email('CSMA-Tracker@csma.clinic', [obj.email.toLowerCase()], subject, body, "Rest Tracker Report", pass, null);
 
       break;
     case 'edit':
@@ -112,19 +118,33 @@ let  firstKey = "", newvalues, query = "";
 
 
 
-app.post("/scan", (req, res, next) => {
+app.post("/scan", async (req, res, next) => {
   const cid = req.body.cid;
   const pid = req.body.pid;
+  const pemail = req.body.pemail;
   const base_url = "https://airwayassessment.azurewebsites.net";
   const input_text = `${base_url}?cid=${cid}&pid=${pid}`;
+  let src = "";
 
-  qrcode.toDataURL(input_text, (err, src) => {
-    if (err) res.send("Something went wrong!!");
+    try {
+      src = await qrcode.toDataURL(input_text) 
+    } catch (err) {
+      return res.send("Qr code error");
+    }
+
+    let subject = "C-GASP Screener Level-1 Survey Test";
+    const pass = 'CsmaTraker1999';
+    let body = `Please either scan the QR code or click the link below to begin your survey (C-GASP Screener Level-1 Survey Test):<br/><a href="${input_text}">${input_text}</a><br/><br/><img src="${src}" alt="QR Code"><br/>`
+
     res.render("scan", {
+      cid: cid,
       qr_code: src,
-      url: input_text
+      url: input_text,
+      pemail : pemail
     });
-  });
+
+    await send365Email('CSMA-Tracker@csma.clinic', [pemail.toLowerCase()], subject, body, "Rest Tracker Report", pass, null);
+  
 });
 
 

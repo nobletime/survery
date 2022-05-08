@@ -817,9 +817,9 @@ var surveys = [
           "elements": [
            {
             "type": "text",
-            "name": "child_initial",
+            "name": "child_initials",
             "maxWidth": "400px",
-            "title": "Child's Initial",
+            "title": "Child's Initials",
             "isRequired": true
            },
            {

@@ -11,16 +11,18 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" style="font-size: 17px;">
+        <br>The following information was sent to <span id="pemail"><%=pemail%></span>
+        <br/> <br/>
+        <label for="link">Link: </label>
+        <input id="link" type="text" value=<%=url%> style="width:700px;height:40px;margin-bottom:40px;font-size:16px">
+        
+        <br/>
         <br>
         <img src=<%=qr_code %> alt="QR Code">
         <br/>
         <br>
-        <label for="link">Link: </label>
-        <input id="link" type="text" value=<%=url%> style="width:700px;height:40px;margin-bottom:40px;font-size:16px">
-        <br/>
-        <br>
-        <a href="/" role="button" class="btn btn-primary">Back</a>
+        <a href="/qrcode?cid=<%=cid%>" role="button" class="btn btn-primary">Back</a>
         <a href=<%=qr_code %> role="button" class="btn btn-primary" download='QRcode.png'>Download</a>
     </div>
 </body>

@@ -13,15 +13,26 @@ $(document).ready(function () {
 		}, 	{
 			label: "Clinic Address:",
 			name: "clinic_address"
-		},{
+		},{ 
+		label: "Doctor's Name:",
+		name: "doctor_name"
+	},	
+		{ 
+		label: "Phone Number:",
+		name: "phone_number"
+	},		
+		{ 	
+			label: "Email:",
+			name: "email"
+		},
+		{ 
+		label: "Contact Person:",
+		name: "contact_person" },	
+		{
 			label: "Created Date:",
 			name: "created_date",
 			type:"datetime",
 			format: 'MM/DD/YYYY'
-		},
-		{
-			label: "Email:",
-			name: "email"
 		},
 		{
 			label: "Active:",
@@ -75,9 +86,12 @@ $(document).ready(function () {
 			// },
 			{ data: "clinic_id" },
 			{ data: "clinic_name" },
-			{ data: "clinic_address" },
-			{ data: "created_date" },
+			{ data: "clinic_address" },		
+			{ data: "doctor_name" , "defaultContent": "<i>Null</i>"},	
+			{ data: "phone_number" , "defaultContent": "<i>Null</i>"},		
 			{ data: "email", "defaultContent": "<i>Null</i>" },
+			{ data: "contact_person", "defaultContent": "<i>Null</i>" },	
+			{ data: "created_date" },
 			{ data: "Active", "defaultContent": "Yes" },
 		],
 		order: [1, 'asc'],
@@ -121,10 +135,10 @@ $(document).ready(function () {
 		
 //	$('#clinic-list-table').off( 'click', 'tbody td:not(:first-child)' );
 
-// editor.on('preSubmit', function (e, datacontent, action) {
-// 	if (action == "create") {
-
-// 	}
-// })
+editor.on('preSubmit', function (e, datacontent, action) {debugger;
+	if (action == "create") {
+		datacontent.data[0].clinic_id = datacontent.data[0].clinic_id.toLocaleLowerCase()
+	}
+})
 
 });

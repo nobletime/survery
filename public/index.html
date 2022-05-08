@@ -61,6 +61,7 @@
 
                 }, 300)
                 document.getElementById("qrcode").style.display = "none";
+                document.getElementById("onboarding").style.display = "none";
             }
 
             if (localStorage.getItem('done-survey') != null) {
@@ -86,7 +87,7 @@
     <a href="/qrcode" id="qrcode"> <button style="position:absolute;left:50%;" type="button"
             class="btn btn-primary">Generate QR Code</button></a>
 
-            <a href="/onboarding" id=""> <button style="position:absolute;left:60%;" type="button"
+            <a href="/onboarding" id="onboarding"> <button style="position:absolute;left:60%;" type="button"
                 class="btn btn-primary">Onboarding</button></a>
 
 </body>
