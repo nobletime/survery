@@ -816,13 +816,24 @@ var surveys = [
           "name": "panel1",
           "elements": [
            {
-            "type": "html",
-            "name": "question3",
-            "html": " <label for=\"child_initials\">Child's Initials:</label>\n  <input type=\"text\" id=\"child_initials\" name=\"child_initials\" >\n\n<label for=\"cdob\">Child's Birthdate :</label>\n\n<input type=\"date\" id=\"cdob\" name=\"cdob\"\n       value=\"\"\n       >"
+            "type": "text",
+            "name": "child_initial",
+            "maxWidth": "400px",
+            "title": "Child's Initial",
+            "isRequired": true
+           },
+           {
+            "type": "text",
+            "name": "dob",
+            "minWidth": "100px",
+            "maxWidth": "400px",
+            "title": "Child's Birthdate:",
+            "isRequired": true,
+            "inputType": "date"
            },
            {
             "type": "radiogroup",
-            "name": "question2",
+            "name": "gender",
             "title": "Child's Gender",
             "isRequired": true,
             "choices": [
@@ -838,7 +849,7 @@ var surveys = [
            },
            {
             "type": "radiogroup",
-            "name": "question7",
+            "name": "relationship_child",
             "title": "Your Relationship to the child:",
             "isRequired": true,
             "choices": [
@@ -868,7 +879,7 @@ var surveys = [
         "elements": [
          {
           "type": "matrix",
-          "name": "question4",
+          "name": "main_questions",
           "title": "DOES YOUR CHILD FREQUENTLY HAVE ANY OF THE FOLLOWING:",
           "isRequired": true,
           "columns": [
@@ -888,30 +899,30 @@ var surveys = [
           "rows": [
            {
             "value": "Row 1",
-            "text": "Mouth Breathing / Lips Apart either while Awake or Asleep? "
+            "text": "1. Mouth Breathing / Lips Apart either while Awake or Asleep? "
            },
            {
             "value": "Row 2",
-            "text": "While sleeping or napping: Snore (even slightly) / have Noisy Breathing / Difficulty Breathing / Pauses or gasping during Breathing? "
+            "text": "2. While sleeping or napping: Snore (even slightly) / have Noisy Breathing / Difficulty Breathing / Pauses or gasping during Breathing? "
            },
            {
             "value": "Row 3",
-            "text": "Neck Extended Upwards when Sleeping / Restless Sleep / Frequent Awakenings / Grinding or Clenching Teeth during Sleep?"
+            "text": "3. Neck Extended Upwards when Sleeping / Restless Sleep / Frequent Awakenings / Grinding or Clenching Teeth during Sleep?"
            },
            {
             "value": "Row 4",
-            "text": "Upon wakening: Dry Mouth / Sore or achy Jaw / Headaches / Stuffy Nose / Difficulty Awakening in the Morning?"
+            "text": "4. Upon wakening: Dry Mouth / Sore or achy Jaw / Headaches / Stuffy Nose / Difficulty Awakening in the Morning?"
            },
            {
             "value": "Row 5",
-            "text": "Daytime Sleepiness or Tiredness / Daily Behavioral or Emotional Issues / Difficulty paying Attention / Hyperactivity / Difficulty at School?"
+            "text": "5. Daytime Sleepiness or Tiredness / Daily Behavioral or Emotional Issues / Difficulty paying Attention / Hyperactivity / Difficulty at School?"
            }
           ],
           "isAllRowRequired": true
          },
          {
           "type": "rating",
-          "name": "question5",
+          "name": "rating",
           "title": "How hard was it to complete this form?",
           "isRequired": true,
           "rateValues": [
@@ -932,14 +943,15 @@ var surveys = [
          {
           "type": "comment",
           "name": "question6",
-          "visibleIf": "{question5} = hard",
+          "visibleIf": "{rating} = hard",
           "title": "If Difficult Why? "
          }
         ],
         "title": "For children ages 2 through 12 ",
         "description": "Please complete the entire questionnaire in order to address health related issues for your child."
        }
-      ]
+      ],
+      "showQuestionNumbers": "off"
      }
   }, 
   {
@@ -1038,19 +1050,104 @@ var surveys = [
 
 var results = [
   {
-    id: "1",
-    data: [
-      { "Quality": { "affordable": "5", "better then others": "5", "does what it claims": "5", "easy to use": "5" }, "satisfaction": 5, "recommend friends": 5, "suggestions": "I am happy!", "price to competitors": "Not sure", "price": "low", "pricelimit": { "mostamount": "100", "leastamount": "100" } },
-      { "Quality": { "affordable": "3", "does what it claims": "2", "better then others": "2", "easy to use": "3" }, "satisfaction": 3, "suggestions": "better support", "price to competitors": "Not sure", "price": "high", "pricelimit": { "mostamount": "60", "leastamount": "10" } }
+    pages: [
+        {
+            "elements": [
+                {
+                    "type": "matrix",
+                    "name": "Quality",
+                    "title": "Please indicate if you agree or disagree with the following statements",
+                    "columns": [
+                        {
+                            "value": 1,
+                            "text": "Strongly Disagree"
+                        }, {
+                            "value": 2,
+                            "text": "Disagree"
+                        }, {
+                            "value": 3,
+                            "text": "Neutral"
+                        }, {
+                            "value": 4,
+                            "text": "Agree"
+                        }, {
+                            "value": 5,
+                            "text": "Strongly Agree"
+                        }
+                    ],
+                    "rows": [
+                        {
+                            "value": "affordable",
+                            "text": "Product is affordable"
+                        }, {
+                            "value": "does what it claims",
+                            "text": "Product does what it claims"
+                        }, {
+                            "value": "better then others",
+                            "text": "Product is better than other products on the market"
+                        }, {
+                            "value": "easy to use",
+                            "text": "Product is easy to use"
+                        }
+                    ]
+                }, {
+                    "type": "rating",
+                    "name": "satisfaction",
+                    "title": "How satisfied are you with the Product?",
+                    "isRequired": true,
+                    "mininumRateDescription": "Not Satisfied",
+                    "maximumRateDescription": "Completely satisfied"
+                }, {
+                    "type": "rating",
+                    "name": "recommend friends",
+                    "visibleIf": "{satisfaction} > 3",
+                    "title": "How likely are you to recommend the Product to a friend or co-worker?",
+                    "mininumRateDescription": "Will not recommend",
+                    "maximumRateDescription": "I will recommend"
+                }, {
+                    "type": "comment",
+                    "name": "suggestions",
+                    "title": "What would make you more satisfied with the Product?"
+                }
+            ]
+        }, {
+            "elements": [
+                {
+                    "type": "radiogroup",
+                    "name": "price to competitors",
+                    "title": "Compared to our competitors, do you feel the Product is",
+                    "choices": ["Less expensive", "Priced about the same", "More expensive", "Not sure"]
+                }, {
+                    "type": "radiogroup",
+                    "name": "price",
+                    "title": "Do you feel our current price is merited by our product?",
+                    "choices": ["correct|Yes, the price is about right", "low|No, the price is too low for your product", "high|No, the price is too high for your product"]
+                }, {
+                    "type": "multipletext",
+                    "name": "pricelimit",
+                    "title": "What is the... ",
+                    "items": [
+                        {
+                            "name": "mostamount",
+                            "title": "Most amount you would every pay for a product like ours"
+                        }, {
+                            "name": "leastamount",
+                            "title": "The least amount you would feel comfortable paying"
+                        }
+                    ]
+                }
+            ]
+        }, {
+            "elements": [
+                {
+                    "type": "text",
+                    "name": "email",
+                    "title": "Thank you for taking our survey. Your survey is almost complete, please enter your email address in the box below if you wish to participate in our drawing, then press the 'Submit' button."
+                }
+            ]
+        }
     ]
-  },
-  {
-    id: "2",
-    data: [
-      { "member_arrray_employer": [{}], "partner_arrray_employer": [{}], "maritalstatus_c": "Married", "member_receives_income_from_employment": "0", "partner_receives_income_from_employment": "0" },
-      { "member_arrray_employer": [{}], "partner_arrray_employer": [{}], "maritalstatus_c": "Single", "member_receives_income_from_employment": "1", "member_type_of_employment": ["Self employment"], "member_seasonal_intermittent_or_contract_work": "0" }
-    ]
-  }
+}
 ];
 
 module.exports = {
@@ -1058,3 +1155,81 @@ module.exports = {
   results: results,
   defaultName: "New Survey"
 };
+
+
+
+// {
+//   "title": "Sleepiness Scale",
+//   "description": "what this doe",
+//   "logoPosition": "right",
+//   "pages": [
+//    {
+//     "name": "page1",
+//     "elements": [
+//      {
+//       "type": "matrix",
+//       "name": "question1",
+//       "title": "How Sleepy Are You? How likely are you to doze off or fall asleep in the following situations? You should rate your chances of dozing off, not just feeling tired. Even if you have not done some of these things recently try to determine how they would have affected you. For each situation, decide whether or not you would have: · No chance of dozing =0 · Slight chance of dozing =1 · Moderate chance of dozing =2 · High chance of dozing =3",
+//       "columns": [
+//        {
+//         "value": "Column 1",
+//         "text": "0"
+//        },
+//        {
+//         "value": "Column 2",
+//         "text": "1"
+//        },
+//        {
+//         "value": "Column 3",
+//         "text": "2"
+//        },
+//        {
+//         "value": "Column 4",
+//         "text": "3"
+//        }
+//       ],
+//       "rows": [
+//        {
+//         "value": "Row 8",
+//         "text": "Watching TV"
+//        },
+//        {
+//         "value": "Row 1",
+//         "text": "Sitting and reading"
+//        },
+//        {
+//         "value": "Row 2",
+//         "text": "Sitting inactive in a public place (e.g., a theater or a meeting) · "
+//        },
+//        {
+//         "value": "Row 3",
+//         "text": "As a passenger in a car for an hour without a break ·"
+//        },
+//        {
+//         "value": "Row 4",
+//         "text": "Lying down to rest in the afternoon when circumstances permit"
+//        },
+//        {
+//         "value": "Row 5",
+//         "text": " Sitting and talking to someone ·"
+//        },
+//        {
+//         "value": "Row 6",
+//         "text": " Sitting quietly after a lunch without alcohol "
+//        },
+//        {
+//         "value": "Row 7",
+//         "text": "In a car, while stopped for a few minutes in traffic"
+//        }
+//       ]
+//      },
+//      {
+//       "type": "text",
+//       "name": "question3",
+//       "title": " "
+//      }
+//     ],
+//     "description": "How did you sleep"
+//    }
+//   ]
+//  }

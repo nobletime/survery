@@ -2,6 +2,8 @@ var express = require("express");
 const fs = require("fs")
 var session = require("express-session");
 var dbadapter = require("./dbadapter");
+const mdb  = require("./db");
+const { ObjectId } = require('mongodb');
 var inmemorydbadapter = require("./inmemorydbadapter");
 var apiBaseAddress = "/api";
 
@@ -23,17 +25,92 @@ app.use(
   })
 );
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "view"));
 app.use(express.static(__dirname + "/public"));
-//app.use(express.static("public"));
+app.use(express.text({}));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }))
+app.use(express.json({ limit: '50mb', extended: true }))
+//app.use(express.raw({ type: 'application/octet-stream', limit: '50mb' }));
+
+
+
+app.get("/result", async (req, res, next) => {  
+  const result = await mdb.find("result", {});
+  res.send(JSON.stringify(result[result.length-1])
+  );
+});
 
 app.get("/qrcode", (req, res, next) => {
-  res.render("qrcode");
+  res.render("qrcode", {
+    cid: "",
+    pid: "",
+    result: ""
+  });
 });
+
+app.get("/onboarding", (req, res, next) => {
+  res.render("onboarding", {
+
+  });
+});
+
+app.get('/clinic-list', async (req, res)  =>{
+  const result = await mdb.find("onboarding", {});
+
+      result.forEach(e => e['DT_RowId'] = e._id.toString());
+
+      let tableData = { "data": result, "options": [], "files": [], "debug": [{ "query": "SELECT  `id` as 'id', `name` as 'name', `created_by` as 'created_by', `type` as 'type', `email` as 'email', `start_date` as 'start_date', `interval` as 'interval', FROM  `scheduled_events` ", "bindings": [] }] };
+
+      res.send(JSON.stringify(tableData));
+})
+
+app.post('/clinic-list', async (req, res) => {
+let  firstKey = "", newvalues, query = "";
+  let data = req.body.data, result ="";
+
+  switch (req.body.action) {
+    case 'create':
+      let obj = data[0];
+       result = await  mdb.save("onboarding", obj);
+
+          templateTData.data = [obj];
+          obj['DT_RowId'] = obj._id.toString();
+          res.send(JSON.stringify(templateTData))    
+
+
+      break;
+    case 'edit':
+      firstKey = Object.keys(data)[0];
+      let datatmp = req.body.data[firstKey];
+      delete datatmp._id;
+
+      query = { '_id': new ObjectId(firstKey) };
+      newvalues = { $set: datatmp };
+
+       result = await mdb.updateOne("onboarding", query,newvalues);
+          datatmp['DT_RowId'] = firstKey;
+          templateTData.data = [datatmp];
+          res.send(JSON.stringify(templateTData));
+
+   
+      break;
+
+    case 'remove':
+
+      firstKey = Object.keys(data)[0];
+      newvalues = data[firstKey];
+      query = { 'clinic_id': newvalues.clinic_id };
+      result = await mdb.deleteOne("onboarding", query);
+      res.send(templateTData)
+      break;
+  }
+
+
+});
+
+
 
 app.post("/scan", (req, res, next) => {
   const cid = req.body.cid;
@@ -45,6 +122,7 @@ app.post("/scan", (req, res, next) => {
     if (err) res.send("Something went wrong!!");
     res.render("scan", {
       qr_code: src,
+      url: input_text
     });
   });
 });
@@ -102,10 +180,12 @@ app.post(apiBaseAddress + "/changeJson", function (req, res) {
   }); 
 });
 
-app.post(apiBaseAddress + "/post", function (req, res) {
+app.post(apiBaseAddress + "/post", async function (req, res) {
   var db = getDBAdapter(req);
   var postId = req.body.postId;
   var surveyResult = req.body.surveyResult;
+
+  const result = await mdb.save("result", surveyResult);
   db.postResults(postId, surveyResult, function (result) {
     sendJsonResult(res, result.json);
   });
@@ -137,3 +217,6 @@ app.get(["/", "/run/*", "/edit/*", "/results/*"], function (req, res, next) {
 app.listen(process.env.PORT || 3040, function () {
   console.log("Listening!");
 });
+
+
+let templateTData = { "data": [], "debug": [{ "query": "DELETE FROM  `datatables_demo` WHERE (`id` = :where_1 )", "bindings": [{ "name": ":where_1", "value": "3", "type": null }] }] };
