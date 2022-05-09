@@ -14,8 +14,8 @@ $(document).ready(function () {
 			label: "Clinic Address:",
 			name: "clinic_address"
 		},{ 
-		label: "Doctor's Name:",
-		name: "doctor_name"
+		label: "Clinician:",
+		name: "clinician"
 	},	
 		{ 
 		label: "Phone Number:",
