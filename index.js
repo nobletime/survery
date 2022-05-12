@@ -13,6 +13,7 @@ const ejs = require("ejs");
 const path = require("path");
 const qrcode = require("qrcode");
 const exp = require("constants");
+const { runInNewContext } = require("vm");
 
 const app = express();
 
@@ -22,7 +23,7 @@ app.use(
     rolling: true,
     resave: true,
     saveUninitialized: false,
-    cookie: { maxAge: 3600000, secret: true },
+    cookie: { maxAge: 5400000, secret: true },
   })
 );
 
@@ -62,6 +63,11 @@ passport.use(new LocalStrategy({
     if (password != user.password)
       return done(null, false, req.flash('message', 'Wrong Credential'))
 
+      if(req.body.remember){
+        req.session.cookie.maxAge = 5400000 ;
+      } else {
+        req.session.cookie.maxAge = 300000 
+      }
     return done(null, username)
   }
 ))
