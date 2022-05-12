@@ -1,13 +1,9 @@
-var express = require("express");
+const express = require("express");
 const fs = require("fs")
-var session = require("express-session");
-var dbadapter = require("./dbadapter");
-const mdb  = require("./db");
-const {send365Email} = require("./email");
+const session = require("express-session");
+const mdb = require("./db");
+const { send365Email } = require("./email");
 const { ObjectId } = require('mongodb');
-var inmemorydbadapter = require("./inmemorydbadapter");
-var apiBaseAddress = "/api";
-
 
 const ejs = require("ejs");
 const path = require("path");
@@ -15,7 +11,6 @@ const qrcode = require("qrcode");
 const exp = require("constants");
 
 const app = express();
-const port = process.env.port || 3000;
 
 app.use(
   session({
@@ -26,7 +21,6 @@ app.use(
   })
 );
 
-
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "view"));
 app.use(express.static(__dirname + "/public"));
@@ -35,20 +29,30 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }))
 app.use(express.json({ limit: '50mb', extended: true }))
 //app.use(express.raw({ type: 'application/octet-stream', limit: '50mb' }));
 
+app.get("/qrcode", async (req, res, next) => {
+  if (req.query.cid) {
+    const result = await mdb.findOne("onboarding", { clinic_id: req.query.cid });
+    if (result == null) {
+     return res.render("qrcode", {
+        cid: "",
+        clinic_name: "NOT_FOUND",
+        result: ""
+      });
+    }
 
+    res.render("qrcode", {
+      cid: req.query.cid,
+      clinic_name: result.clinic_name,
+      result: ""
+    });
+  } else {
+    res.render("qrcode", {
+      cid: "",
+      clinic_name: "",
+      result: ""
+    });
+  }
 
-app.get("/result", async (req, res, next) => {  
-  const result = await mdb.find("result", {});
-  res.send(JSON.stringify(result[result.length-1])
-  );
-});
-
-app.get("/qrcode", (req, res, next) => {
-  res.render("qrcode", {
-    cid: "",
-    pid: "",
-    result: ""
-  });
 });
 
 app.get("/onboarding", (req, res, next) => {
@@ -57,34 +61,34 @@ app.get("/onboarding", (req, res, next) => {
   });
 });
 
-app.get('/clinic-list', async (req, res)  =>{
+app.get('/clinic-list', async (req, res) => {
   const result = await mdb.find("onboarding", {});
 
-      result.forEach(e => e['DT_RowId'] = e._id.toString());
+  result.forEach(e => e['DT_RowId'] = e._id.toString());
 
-      let tableData = { "data": result, "options": [], "files": [], "debug": [{ "query": "SELECT  `id` as 'id', `name` as 'name', `created_by` as 'created_by', `type` as 'type', `email` as 'email', `start_date` as 'start_date', `interval` as 'interval', FROM  `scheduled_events` ", "bindings": [] }] };
+  let tableData = { "data": result, "options": [], "files": [], "debug": [{ "query": "SELECT  `id` as 'id', `name` as 'name', `created_by` as 'created_by', `type` as 'type', `email` as 'email', `start_date` as 'start_date', `interval` as 'interval', FROM  `scheduled_events` ", "bindings": [] }] };
 
-      res.send(JSON.stringify(tableData));
+  res.send(JSON.stringify(tableData));
 })
 
 app.post('/clinic-list', async (req, res) => {
-let  firstKey = "", newvalues, query = "";
-  let data = req.body.data, result ="";
+  let firstKey = "", newvalues, query = "";
+  let data = req.body.data, result = "";
 
   switch (req.body.action) {
     case 'create':
       let obj = data[0];
-       result = await  mdb.save("onboarding", obj);
+      result = await mdb.save("onboarding", obj);
 
-          templateTData.data = [obj];
-          obj['DT_RowId'] = obj._id.toString();
-          res.send(JSON.stringify(templateTData));
-       
-          let subject = "C-GASP Screener Service Registeration";
-          const pass = 'CsmaTraker1999';
-          const surveylink = `https://airwayassessment.azurewebsites.net/qrcode?cid=${obj.clinic_id}`
-          const body = `Your C-GASP Screener Service link to generate QR-Code and view survey results is below:<br/><a href="${surveylink}">${surveylink}</a>`;
-          await send365Email('CSMA-Tracker@csma.clinic', [obj.email.toLowerCase()], subject, body, "Rest Tracker Report", pass, null);
+      templateTData.data = [obj];
+      obj['DT_RowId'] = obj._id.toString();
+      res.send(JSON.stringify(templateTData));
+
+      let subject = "C-GASP Screener Service Registeration";
+      const pass = 'CsmaTraker1999';
+      const surveylink = `https://airwayassessment.azurewebsites.net/qrcode?cid=${obj.clinic_id}`
+      const body = `Your C-GASP Screener Service link to generate QR-Code and view survey results is below:<br/><a href="${surveylink}">${surveylink}</a>`;
+      await send365Email('CSMA-Tracker@csma.clinic', [obj.email.toLowerCase()], subject, body, "Rest Tracker Report", pass, null);
 
       break;
     case 'edit':
@@ -95,12 +99,12 @@ let  firstKey = "", newvalues, query = "";
       query = { '_id': new ObjectId(firstKey) };
       newvalues = { $set: datatmp };
 
-       result = await mdb.updateOne("onboarding", query,newvalues);
-          datatmp['DT_RowId'] = firstKey;
-          templateTData.data = [datatmp];
-          res.send(JSON.stringify(templateTData));
+      result = await mdb.updateOne("onboarding", query, newvalues);
+      datatmp['DT_RowId'] = firstKey;
+      templateTData.data = [datatmp];
+      res.send(JSON.stringify(templateTData));
 
-   
+
       break;
 
     case 'remove':
@@ -116,6 +120,11 @@ let  firstKey = "", newvalues, query = "";
 
 });
 
+app.post('/save', async (req, res) => {
+  result = await mdb.save("results", req.body);
+res.send("Save successful")
+})
+
 
 
 app.post("/scan", async (req, res, next) => {
@@ -126,116 +135,46 @@ app.post("/scan", async (req, res, next) => {
   const input_text = `${base_url}?cid=${cid}&pid=${pid}`;
   let src = "";
 
-    try {
-      src = await qrcode.toDataURL(input_text) 
-    } catch (err) {
-      return res.send("Qr code error");
-    }
+  try {
+    src = await qrcode.toDataURL(input_text)
+  } catch (err) {
+    return res.send("Qr code error");
+  }
 
-    let subject = "C-GASP Screener Level-1 Survey Test";
-    const pass = 'CsmaTraker1999';
-    let body = `Please either scan the QR code or click the link below to begin your survey (C-GASP Screener Level-1 Survey Test):<br/><a href="${input_text}">${input_text}</a><br/><br/><img src="${src}" alt="QR Code"><br/>`
+  let subject = "C-GASP Screener Level-1 Survey Test";
+  const pass = 'CsmaTraker1999';
+  let body = `Please either scan the QR code or click the link below to begin your survey (C-GASP Screener Level-1 Survey Test):<br/><a href="${input_text}">${input_text}</a><br/><br/><img src="${src}" alt="QR Code"><br/>`
 
-    res.render("scan", {
-      cid: cid,
-      qr_code: src,
-      url: input_text,
-      pemail : pemail
-    });
+  res.render("scan", {
+    cid: cid,
+    qr_code: src,
+    url: input_text,
+    pemail: pemail
+  });
 
-    await send365Email('CSMA-Tracker@csma.clinic', [pemail.toLowerCase()], subject, body, "Rest Tracker Report", pass, null);
-  
+  await send365Email('CSMA-Tracker@csma.clinic', [pemail.toLowerCase()], subject, body, "Rest Tracker Report", pass, null);
+
 });
 
-
-function getDBAdapter(req) {
-  //var db = new dbadapter();
-  var db = new inmemorydbadapter(req.session);
-  return db;
-}
-
-function sendJsonResult(res, obj) {
+app.get("/results", async (req, res, next) => {
   res.setHeader("Content-Type", "application/json");
-  res.send(JSON.stringify(obj));
-}
-
-app.get(apiBaseAddress + "/getActive", function (req, res) {
-  var db = getDBAdapter(req);
-  db.getSurveys(function (result) {
-    sendJsonResult(res, result);
-  });
+  const result = await mdb.find("results", { clinic_id: req.query.cid });
+  res.send(JSON.stringify(result)
+  );
 });
 
-app.get(apiBaseAddress + "/getSurvey", function (req, res) {
-  var db = getDBAdapter(req);
-  var surveyId = req.query["surveyId"];
-  db.getSurvey(surveyId, function (result) {
-    sendJsonResult(res, result);
-  });
+app.get("/login", function (req, res, next) {
+  res.render("login");
 });
 
-app.get(apiBaseAddress + "/changeName", function (req, res) {
-  var db = getDBAdapter(req);
-  var id = req.query["id"];
-  var name = req.query["name"];
-  db.changeName(id, name, function (result) {
-    sendJsonResult(res, result);
-  });
-});
-
-app.get(apiBaseAddress + "/create", function (req, res) {
-  var db = getDBAdapter(req);
-  var name = req.query["name"];
-  db.addSurvey(name, function (survey) {
-    sendJsonResult(res, survey);
-  });
-});
-
-app.post(apiBaseAddress + "/changeJson", function (req, res) {
-  var db = getDBAdapter(req);
-  var id = req.body.id;
-  var json = req.body.json;
-  db.storeSurvey(id, null, json, function (survey) {
-    sendJsonResult(res, survey);
-  }); 
-});
-
-app.post(apiBaseAddress + "/post", async function (req, res) {
-  var db = getDBAdapter(req);
-  var postId = req.body.postId;
-  var surveyResult = req.body.surveyResult;
-
-  const result = await mdb.save("result", surveyResult);
-  db.postResults(postId, surveyResult, function (result) {
-    sendJsonResult(res, result.json);
-  });
-});
-
-app.get(apiBaseAddress + "/delete", function (req, res) {
-  var db = getDBAdapter(req);
-  var id = req.query["id"];
-  db.deleteSurvey(id, function (result) {
-    sendJsonResult(res, {});
-  });
-});
-
-app.get(apiBaseAddress + "/results", function (req, res) {
-  var db = getDBAdapter(req);
-  var postId = req.query["postId"];
-  db.getResults(postId, function (result) {
-    sendJsonResult(res, result);
-  });
-});
-
-app.get(["/", "/run/*", "/edit/*", "/results/*"], function (req, res, next) {
-//  res.send("<strong>Our records show that you have already completed this survey.</strong>")
-  res.sendFile("index.html", { root: __dirname + "/public" });
+app.get(["/", "/results/*"], function (req, res, next) {
+  res.render("index");
 });
 
 
 
 app.listen(process.env.PORT || 3040, function () {
-  console.log("Listening!");
+  console.log("Listening to 3040!");
 });
 
 

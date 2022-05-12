@@ -21,6 +21,21 @@ async function find(collection, query) {
     }
 };
 
+async function findOne(collection, query) {
+    const dbname = "survey";
+ 
+    const client = await MongoClient.connect(dburi, { useNewUrlParser: true });
+    const db = client.db(dbname);
+
+    try {
+        const result = await db.collection(collection).findOne(query);
+        return  result;
+    }
+    finally {
+        client.close();
+    }
+};
+
 async function save(collection, obj) {
     const dbname = "survey";
  
@@ -68,6 +83,7 @@ async function updateOne(collection, query, newvalues) {
 
 
 module.exports.find = find
+module.exports.findOne = findOne
 module.exports.save = save
 module.exports.deleteOne = deleteOne
 module.exports.updateOne = updateOne
