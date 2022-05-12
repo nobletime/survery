@@ -1,6 +1,9 @@
 const express = require("express");
 const fs = require("fs")
 const session = require("express-session");
+const passport = require('passport')
+const bcrypt = require('bcryptjs')
+const LocalStrategy = require('passport-local')
 const mdb = require("./db");
 const { send365Email } = require("./email");
 const { ObjectId } = require('mongodb');
@@ -14,12 +17,14 @@ const app = express();
 
 app.use(
   session({
-    secret: "mysecret",
-    resave: true,
-    saveUninitialized: true,
-    //cookie: { secure: true }
+    secret: "airway-assessment-csma",
+    rolling: true,
+    resave: true, 
+    saveUninitialized: false,
+    cookie: { maxAge: 3600000 , secret: true},
   })
 );
+
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "view"));
@@ -29,11 +34,58 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }))
 app.use(express.json({ limit: '50mb', extended: true }))
 //app.use(express.raw({ type: 'application/octet-stream', limit: '50mb' }));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
+const user = {
+  username: 'admin',
+  password: 'Rest007!',
+  passwordHash: 'Rest007!',
+  id: 1
+}
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.use(new LocalStrategy(
+  (username, password, done) => {
+    if (username.toLowerCase() != user.username)
+      return done(null, false)
+    if (password  != user.password)
+      return done(null, false)
+
+    return done(null, username)
+  }
+))
+
+
+
+var isAuthenticated = function (req, res, next) {
+  // if user is authenticated in the session, call the next() to call the next request handler
+  // Passport adds this method to request object. A middleware is allowed to add properties to
+  // request and response objects
+  if (req.isAuthenticated())
+    return next();
+  // if the user is not authenticated then redirect him to the login page
+  res.render('login');
+}
+
+app.post('/signin', passport.authenticate('local', {
+  successRedirect: '/onboarding',
+  failureRedirect: '/login'
+}))
+
+
+
 app.get("/qrcode", async (req, res, next) => {
   if (req.query.cid) {
     const result = await mdb.findOne("onboarding", { clinic_id: req.query.cid });
     if (result == null) {
-     return res.render("qrcode", {
+      return res.render("qrcode", {
         cid: "",
         clinic_name: "NOT_FOUND",
         result: ""
@@ -55,7 +107,9 @@ app.get("/qrcode", async (req, res, next) => {
 
 });
 
-app.get("/onboarding", (req, res, next) => {
+
+
+app.get("/onboarding", isAuthenticated, (req, res, next) => {
   res.render("onboarding", {
 
   });
@@ -122,7 +176,7 @@ app.post('/clinic-list', async (req, res) => {
 
 app.post('/save', async (req, res) => {
   result = await mdb.save("results", req.body);
-res.send("Save successful")
+  res.send("Save successful")
 })
 
 
@@ -164,6 +218,7 @@ app.get("/results", async (req, res, next) => {
 });
 
 app.get("/login", function (req, res, next) {
+  req.logout();
   res.render("login");
 });
 
