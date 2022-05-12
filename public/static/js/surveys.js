@@ -552,11 +552,11 @@ function downloadResult(cid, pid, openOrDownload) {
 
                 surveyPDF.onRenderHeader.add(function (_, canvas) {
                     canvas.drawText({
-                        text:`${document.getElementById("clinic_name").value}, Patient Id=${pid}                                airwayassessment.azurewebsites.net`,
+                        text:`Clinic = ${document.getElementById("clinic_name").value}, Patient Id=${pid}                                airwayassessment.azurewebsites.net`,
                         fontSize: 10
                     });
                 });
-                surveyPDF.save();
+                surveyPDF.save(`${cid}_${pid}.pdf`);
 
             }
 
