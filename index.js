@@ -4,6 +4,7 @@ const session = require("express-session");
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
 const LocalStrategy = require('passport-local')
+const flash = require('connect-flash');
 const mdb = require("./db");
 const { send365Email } = require("./email");
 const { ObjectId } = require('mongodb');
@@ -36,6 +37,7 @@ app.use(express.json({ limit: '50mb', extended: true }))
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 
 const user = {
   username: 'admin',
@@ -51,12 +53,14 @@ passport.deserializeUser(function (user, done) {
   done(null, user);
 });
 
-passport.use(new LocalStrategy(
-  (username, password, done) => {
-    if (username.toLowerCase() != user.username)
-      return done(null, false)
+passport.use(new LocalStrategy({
+  passReqToCallback: true
+},
+  (req, username, password, done) => {
+    if (username.toString().toLowerCase() != user.username)
+      return done(null, false, req.flash('message', 'Wrong Username'))
     if (password != user.password)
-      return done(null, false)
+      return done(null, false, req.flash('message', 'Wrong Credential'))
 
     return done(null, username)
   }
@@ -71,14 +75,13 @@ var isAuthenticated = function (req, res, next) {
   if (req.isAuthenticated())
     return next();
   // if the user is not authenticated then redirect him to the login page
-  res.render('login');
+  res.redirect('/login');
 }
 
 app.post('/signin', passport.authenticate('local', {
   successRedirect: '/onboarding',
   failureRedirect: '/login'
 }))
-
 
 
 app.get("/qrcode", async (req, res, next) => {
@@ -219,7 +222,8 @@ app.get("/download-results", async (req, res, next) => {
 
 app.get("/login", function (req, res, next) {
   req.logout();
-  res.render("login");
+  const message = req.flash('message')
+  res.render("login", { message });
 });
 
 app.get(["/", "/results/*"], async (req, res, next) => {
@@ -230,7 +234,8 @@ app.get(["/", "/results/*"], async (req, res, next) => {
     else
       res.send(`<div style="text-align:center; font-size:20px"> <strong>Your clinic_id = ${req.query.cid} is not found. Likely because you have NOT been onboarded yet. Please contact the support!</strong>`)
   } else {
-    res.send(`<div style="text-align:center; font-size:20px"> <strong>You are not authorized to view this page. Please contact the support</strong>`)
+    res.redirect("/onboarding")
+    // res.send(`<div style="text-align:center; font-size:20px"> <strong>You are not authorized to view this page. Please contact the support</strong>`)
   }
 });
 
