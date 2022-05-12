@@ -10,373 +10,373 @@ const json = {
     "completedHtml": "<h3>Thank you for completing C-GASP Level 1 Screener!</h3>",
     "completedBeforeHtml": "<h3>Our records show that you have already completed C-GASP Level 1 Screener.</h3>",
     "pages": [
-        {
-            "name": "page2",
-            "elements": [
-                {
-                    "type": "panel",
-                    "name": "panel1",
-                    "elements": [
-                        {
-                            "type": "text",
-                            "name": "dob",
-                            "minWidth": "100px",
-                            "maxWidth": "400px",
-                            "title": "Child's Birthdate:",
-                            "isRequired": true,
-                            "inputType": "date"
-                        },
-                        {
-                            "type": "radiogroup",
-                            "name": "gender",
-                            "title": "Child's Gender",
-                            "isRequired": true,
-                            "choices": [
-                                {
-                                    "value": "female",
-                                    "text": "Female"
-                                },
-                                {
-                                    "value": "male",
-                                    "text": "Male"
-                                }
-                            ]
-                        },
-                        {
-                            "type": "radiogroup",
-                            "name": "relationship_child",
-                            "title": "Your Relationship to the child:",
-                            "isRequired": true,
-                            "choices": [
-                                {
-                                    "value": "mother",
-                                    "text": "Mother"
-                                },
-                                {
-                                    "value": "father",
-                                    "text": "Father"
-                                },
-                                {
-                                    "value": "gaurdian",
-                                    "text": "Gaurdian"
-                                }
-                            ],
-                            "hasOther": true
-                        }
-                    ]
-                }
-            ],
-            "title": "For children ages 2 through 12 ",
-            "description": "Please complete the entire questionnaire in order to address health related issues for your child."
-        },
-        {
-            "name": "page1",
-            "elements": [
-                {
-                    "type": "matrix",
-                    "name": "main_questions",
-                    "title": "DOES YOUR CHILD FREQUENTLY HAVE ANY OF THE FOLLOWING:",
-                    "isRequired": true,
-                    "columns": [
-                        {
-                            "value": "yes",
-                            "text": "YES"
-                        },
-                        {
-                            "value": "no",
-                            "text": "NO"
-                        },
-                        {
-                            "value": "idk",
-                            "text": "I DON'T KNOW"
-                        }
-                    ],
-                    "rows": [
-                        {
-                            "value": "1",
-                            "text": "1. Mouth Breathing / Lips Apart either while Awake or Asleep? "
-                        },
-                        {
-                            "value": "2",
-                            "text": "2. While sleeping or napping: Snore (even slightly) / have Noisy Breathing / Difficulty Breathing / Pauses or gasping during Breathing? "
-                        },
-                        {
-                            "value": "3",
-                            "text": "3. Neck Extended Upwards when Sleeping / Restless Sleep / Frequent Awakenings / Grinding or Clenching Teeth during Sleep?"
-                        },
-                        {
-                            "value": "4",
-                            "text": "4. Upon wakening: Dry Mouth / Sore or achy Jaw / Headaches / Stuffy Nose / Difficulty Awakening in the Morning?"
-                        },
-                        {
-                            "value": "5",
-                            "text": "5. Daytime Sleepiness or Tiredness / Daily Behavioral or Emotional Issues / Difficulty paying Attention / Hyperactivity / Difficulty at School?"
-                        }
-                    ],
-                    "isAllRowRequired": true
-                },
-                {
-                    "type": "rating",
-                    "name": "rating",
-                    "title": "How hard was it to complete this form?",
-                    "isRequired": true,
-                    "rateValues": [
-                        {
-                            "value": "easy",
-                            "text": "Easy"
-                        },
-                        {
-                            "value": "average",
-                            "text": "Average"
-                        },
-                        {
-                            "value": "hard",
-                            "text": "Hard"
-                        }
-                    ]
-                },
-                {
-                    "type": "comment",
-                    "name": "why_hard",
-                    "visibleIf": "{rating} = hard",
-                    "title": "If Hard Why? "
-                }
-            ]
-        },
-        {
-            "name": "page3",
-            "elements": [
-                {
-                    "type": "matrix",
-                    "name": "secondary1",
-                    "visibleIf": "{main_questions.1} = 'yes'",
-                    "title": " 1. Mouth Breathing / Lips Apart either while Awake or Asleep?  YES",
-                    "isRequired": true,
-                    "columns": [
-                        {
-                            "value": "yes",
-                            "text": "YES"
-                        },
-                        {
-                            "value": "no",
-                            "text": "NO"
-                        },
-                        {
-                            "value": "idk",
-                            "text": "I DON'T KNOW"
-                        }
-                    ],
-                    "rows": [
-                        {
-                            "value": "1",
-                            "text": "breath through their mouth while awake [AH1]? "
-                        },
-                        {
-                            "value": "2",
-                            "text": "breath through their mouth while asleep?"
-                        }
-                    ],
-                    "isAllRowRequired": true
-                }
-            ],
-            "description": "C-GASP Level 1B Screener"
-        },
-        {
-            "name": "page6",
-            "elements": [
-                {
-                    "type": "matrix",
-                    "name": "secondary2",
-                    "visibleIf": "{main_questions.2} = 'yes'",
-                    "title": "2. While sleeping or napping: Snore (even slightly) / have Noisy Breathing / Difficulty Breathing / Pauses or gasping during Breathing?  YES",
-                    "isRequired": true,
-                    "columns": [
-                        {
-                            "value": "yes",
-                            "text": "YES"
-                        },
-                        {
-                            "value": "no",
-                            "text": "NO"
-                        },
-                        {
-                            "value": "idk",
-                            "text": "I DON'T KNOW"
-                        }
-                    ],
-                    "rows": [
-                        {
-                            "value": "1",
-                            "text": "snore during sleep?"
-                        },
-                        {
-                            "value": "2",
-                            "text": "have noisy breathing during sleep? "
-                        },
-                        {
-                            "value": "3",
-                            "text": "struggle breathing during sleep?"
-                        },
-                        {
-                            "value": "4",
-                            "text": " stop, gasp or have pauses in breathing during sleep? "
-                        }
-                    ],
-                    "isAllRowRequired": true
-                }
-            ],
-            "description": "C-GASP Level 1B Screener"
-        },
-        {
-            "name": "page7",
-            "elements": [
-                {
-                    "type": "matrix",
-                    "name": "secondary3",
-                    "visibleIf": "{main_questions.3} = 'yes'",
-                    "title": "3. Neck Extended Upwards when Sleeping / Restless Sleep / Frequent Awakenings / Grinding or Clenching Teeth during Sleep? YES",
-                    "isRequired": true,
-                    "columns": [
-                        {
-                            "value": "yes",
-                            "text": "YES"
-                        },
-                        {
-                            "value": "no",
-                            "text": "NO"
-                        },
-                        {
-                            "value": "idk",
-                            "text": "I DON'T KNOW"
-                        }
-                    ],
-                    "rows": [
-                        {
-                            "value": "1",
-                            "text": "sleep with their neck extended? "
-                        },
-                        {
-                            "value": "2",
-                            "text": "have restless sleep?"
-                        },
-                        {
-                            "value": "3",
-                            "text": " wake up frequently at night? "
-                        },
-                        {
-                            "value": "4",
-                            "text": "grind or clench their teeth during sleep?"
-                        }
-                    ],
-                    "isAllRowRequired": true
-                }
-            ],
-            "description": "C-GASP Level 1B Screener"
-        },
-        {
-            "name": "page8",
-            "elements": [
-                {
-                    "type": "matrix",
-                    "name": "secondary4",
-                    "visibleIf": "{main_questions.4} = 'yes'",
-                    "title": "4. Upon wakening: Dry Mouth / Sore or achy Jaw / Headaches / Stuffy Nose / Difficulty Awakening in the Morning? YES",
-                    "isRequired": true,
-                    "columns": [
-                        {
-                            "value": "yes",
-                            "text": "YES"
-                        },
-                        {
-                            "value": "no",
-                            "text": "NO"
-                        },
-                        {
-                            "value": "idk",
-                            "text": "I DON'T KNOW"
-                        }
-                    ],
-                    "rows": [
-                        {
-                            "value": "1",
-                            "text": "wake up with a dry mouth? "
-                        },
-                        {
-                            "value": "2",
-                            "text": "wake up with sore or achy jaw?"
-                        },
-                        {
-                            "value": "3",
-                            "text": "wake up with headaches? "
-                        },
-                        {
-                            "value": "4",
-                            "text": " wake up with a stuffy nose? "
-                        },
-                        {
-                            "value": "5",
-                            "text": "have difficulty waking up in the morning?"
-                        }
-                    ],
-                    "isAllRowRequired": true
-                }
-            ],
-            "description": "C-GASP Level 1B Screener"
-        },
-        {
-            "name": "page4",
-            "elements": [
-                {
-                    "type": "matrix",
-                    "name": "secondary5",
-                    "visibleIf": "{main_questions.5} = 'yes'",
-                    "title": "5. Daytime Sleepiness or Tiredness / Daily Behavioral or Emotional Issues / Difficulty paying Attention / Hyperactivity / Difficulty at School? YES",
-                    "isRequired": true,
-                    "columns": [
-                        {
-                            "value": "yes",
-                            "text": "YES"
-                        },
-                        {
-                            "value": "no",
-                            "text": "NO"
-                        },
-                        {
-                            "value": "idk",
-                            "text": "I DON'T KNOW"
-                        }
-                    ],
-                    "rows": [
-                        {
-                            "value": "1",
-                            "text": "have daytime sleepiness or tiredness during the day?"
-                        },
-                        {
-                            "value": "2",
-                            "text": "daily behavioral or emotional issues?"
-                        },
-                        {
-                            "value": "3",
-                            "text": " have difficulty with paying attention?"
-                        },
-                        {
-                            "value": "4",
-                            "text": "is hyperactive? "
-                        },
-                        {
-                            "value": "5",
-                            "text": "have difficulty waking up in the morning?"
-                        }
-                    ],
-                    "isAllRowRequired": true
-                }
-            ]
-        }
+     {
+      "name": "page2",
+      "elements": [
+       {
+        "type": "panel",
+        "name": "panel1",
+        "elements": [
+         {
+          "type": "text",
+          "name": "dob",
+          "minWidth": "100px",
+          "maxWidth": "400px",
+          "title": "Child's Birthdate:",
+          "isRequired": true,
+          "inputType": "date"
+         },
+         {
+          "type": "radiogroup",
+          "name": "gender",
+          "title": "Child's Gender",
+          "isRequired": true,
+          "choices": [
+           {
+            "value": "female",
+            "text": "Female"
+           },
+           {
+            "value": "male",
+            "text": "Male"
+           }
+          ]
+         },
+         {
+          "type": "radiogroup",
+          "name": "relationship_child",
+          "title": "Your Relationship to the child:",
+          "isRequired": true,
+          "choices": [
+           {
+            "value": "mother",
+            "text": "Mother"
+           },
+           {
+            "value": "father",
+            "text": "Father"
+           },
+           {
+            "value": "gaurdian",
+            "text": "Gaurdian"
+           }
+          ],
+          "hasOther": true
+         }
+        ]
+       }
+      ],
+      "title": "For children ages 2 through 12 ",
+      "description": "Please complete the entire questionnaire in order to address health related issues for your child."
+     },
+     {
+      "name": "page1",
+      "elements": [
+       {
+        "type": "matrix",
+        "name": "main_questions",
+        "title": "DOES YOUR CHILD FREQUENTLY HAVE ANY OF THE FOLLOWING:",
+        "isRequired": true,
+        "columns": [
+         {
+          "value": "yes",
+          "text": "YES"
+         },
+         {
+          "value": "no",
+          "text": "NO"
+         },
+         {
+          "value": "idk",
+          "text": "I DON'T KNOW"
+         }
+        ],
+        "rows": [
+         {
+          "value": "1",
+          "text": "1. Mouth Breathing / Lips Apart either while Awake or Asleep? "
+         },
+         {
+          "value": "2",
+          "text": "2. While sleeping or napping: Snore (even slightly) / have Noisy Breathing / Difficulty Breathing / Pauses or gasping during Breathing? "
+         },
+         {
+          "value": "3",
+          "text": "3. Neck Extended Upwards when Sleeping / Restless Sleep / Frequent Awakenings / Grinding or Clenching Teeth during Sleep?"
+         },
+         {
+          "value": "4",
+          "text": "4. Upon wakening: Dry Mouth / Sore or achy Jaw / Headaches / Stuffy Nose / Difficulty Awakening in the Morning?"
+         },
+         {
+          "value": "5",
+          "text": "5. Daytime Sleepiness or Tiredness / Daily Behavioral or Emotional Issues / Difficulty paying Attention / Hyperactivity / Difficulty at School?"
+         }
+        ],
+        "isAllRowRequired": true
+       },
+       {
+        "type": "rating",
+        "name": "rating",
+        "title": "How hard was it to complete this form?",
+        "isRequired": true,
+        "rateValues": [
+         {
+          "value": "easy",
+          "text": "Easy"
+         },
+         {
+          "value": "average",
+          "text": "Average"
+         },
+         {
+          "value": "hard",
+          "text": "Hard"
+         }
+        ]
+       },
+       {
+        "type": "comment",
+        "name": "why_hard",
+        "visibleIf": "{rating} = hard",
+        "title": "If Hard Why? "
+       }
+      ]
+     },
+     {
+      "name": "page3",
+      "elements": [
+       {
+        "type": "matrix",
+        "name": "secondary1",
+        "visibleIf": "{main_questions.1} = 'yes'",
+        "title": " 1. Mouth Breathing / Lips Apart either while Awake or Asleep?  YES",
+        "isRequired": true,
+        "columns": [
+         {
+          "value": "yes",
+          "text": "YES"
+         },
+         {
+          "value": "no",
+          "text": "NO"
+         },
+         {
+          "value": "idk",
+          "text": "I DON'T KNOW"
+         }
+        ],
+        "rows": [
+         {
+          "value": "1",
+          "text": "breath through their mouth while awake [AH1]? "
+         },
+         {
+          "value": "2",
+          "text": "breath through their mouth while asleep?"
+         }
+        ],
+        "isAllRowRequired": true
+       }
+      ],
+      "description": "C-GASP Level 1B Screener"
+     },
+     {
+      "name": "page6",
+      "elements": [
+       {
+        "type": "matrix",
+        "name": "secondary2",
+        "visibleIf": "{main_questions.2} = 'yes'",
+        "title": "2. While sleeping or napping: Snore (even slightly) / have Noisy Breathing / Difficulty Breathing / Pauses or gasping during Breathing?  YES",
+        "isRequired": true,
+        "columns": [
+         {
+          "value": "yes",
+          "text": "YES"
+         },
+         {
+          "value": "no",
+          "text": "NO"
+         },
+         {
+          "value": "idk",
+          "text": "I DON'T KNOW"
+         }
+        ],
+        "rows": [
+         {
+          "value": "1",
+          "text": "snore during sleep?"
+         },
+         {
+          "value": "2",
+          "text": "have noisy breathing during sleep? "
+         },
+         {
+          "value": "3",
+          "text": "struggle breathing during sleep?"
+         },
+         {
+          "value": "4",
+          "text": " stop, gasp or have pauses in breathing during sleep? "
+         }
+        ],
+        "isAllRowRequired": true
+       }
+      ],
+      "description": "C-GASP Level 1B Screener"
+     },
+     {
+      "name": "page7",
+      "elements": [
+       {
+        "type": "matrix",
+        "name": "secondary3",
+        "visibleIf": "{main_questions.3} = 'yes'",
+        "title": "3. Neck Extended Upwards when Sleeping / Restless Sleep / Frequent Awakenings / Grinding or Clenching Teeth during Sleep? YES",
+        "isRequired": true,
+        "columns": [
+         {
+          "value": "yes",
+          "text": "YES"
+         },
+         {
+          "value": "no",
+          "text": "NO"
+         },
+         {
+          "value": "idk",
+          "text": "I DON'T KNOW"
+         }
+        ],
+        "rows": [
+         {
+          "value": "1",
+          "text": "sleep with their neck extended? "
+         },
+         {
+          "value": "2",
+          "text": "have restless sleep?"
+         },
+         {
+          "value": "3",
+          "text": "wake up frequently at night? "
+         },
+         {
+          "value": "4",
+          "text": "grind or clench their teeth during sleep?"
+         }
+        ],
+        "isAllRowRequired": true
+       }
+      ],
+      "description": "C-GASP Level 1B Screener"
+     },
+     {
+      "name": "page8",
+      "elements": [
+       {
+        "type": "matrix",
+        "name": "secondary4",
+        "visibleIf": "{main_questions.4} = 'yes'",
+        "title": "4. Upon wakening: Dry Mouth / Sore or achy Jaw / Headaches / Stuffy Nose / Difficulty Awakening in the Morning? YES",
+        "isRequired": true,
+        "columns": [
+         {
+          "value": "yes",
+          "text": "YES"
+         },
+         {
+          "value": "no",
+          "text": "NO"
+         },
+         {
+          "value": "idk",
+          "text": "I DON'T KNOW"
+         }
+        ],
+        "rows": [
+         {
+          "value": "1",
+          "text": "wake up with a dry mouth? "
+         },
+         {
+          "value": "2",
+          "text": "wake up with sore or achy jaw?"
+         },
+         {
+          "value": "3",
+          "text": "wake up with headaches? "
+         },
+         {
+          "value": "4",
+          "text": "wake up with a stuffy nose? "
+         },
+         {
+          "value": "5",
+          "text": "have difficulty waking up in the morning?"
+         }
+        ],
+        "isAllRowRequired": true
+       }
+      ],
+      "description": "C-GASP Level 1B Screener"
+     },
+     {
+      "name": "page4",
+      "elements": [
+       {
+        "type": "matrix",
+        "name": "secondary5",
+        "visibleIf": "{main_questions.5} = 'yes'",
+        "title": "5. Daytime Sleepiness or Tiredness / Daily Behavioral or Emotional Issues / Difficulty paying Attention / Hyperactivity / Difficulty at School? YES",
+        "isRequired": true,
+        "columns": [
+         {
+          "value": "yes",
+          "text": "YES"
+         },
+         {
+          "value": "no",
+          "text": "NO"
+         },
+         {
+          "value": "idk",
+          "text": "I DON'T KNOW"
+         }
+        ],
+        "rows": [
+         {
+          "value": "1",
+          "text": "have daytime sleepiness or tiredness during the day?"
+         },
+         {
+          "value": "2",
+          "text": "daily behavioral or emotional issues?"
+         },
+         {
+          "value": "3",
+          "text": "have difficulty with paying attention?"
+         },
+         {
+          "value": "4",
+          "text": "is hyperactive? "
+         },
+         {
+          "value": "5",
+          "text": "have difficulty waking up in the morning?"
+         }
+        ],
+        "isAllRowRequired": true
+       }
+      ]
+     }
     ],
     "showQuestionNumbers": "off",
     "progressBarType": "requiredQuestions",
     "firstPageIsStarted": true
-}
+   }
 
 function getResultLink() {
     //document.getElementById("result_link").href=`/result?cid=${document.getElementById("cid").value}&pid=${document.getElementById("pid").value}`; 
@@ -425,20 +425,19 @@ function convertJsontoHtmlTable(employess) {
     //Getting value for table header
     // {'EmployeeID', 'EmployeeName', 'Address' , 'City','Country'}
     var tablecolumns = [];
-    for (var i = 0; i < employess.length; i++) {
-        for (var key in employess[i]) {
-            if (key == '_id' || key.indexOf('secondary') > -1 || key == 'main_questions') continue;
-            if (tablecolumns.indexOf(key) === -1) {
-                tablecolumns.push(key);
-            }
-        }
-    }
-
+  //  tablecolumns.push('clinic_id')
+    tablecolumns.push('patient_id')
+    tablecolumns.push('dob')
+    tablecolumns.push('gender')
+    tablecolumns.push('relationship_child')
     tablecolumns.push("Q 1")
     tablecolumns.push("Q 2")
     tablecolumns.push("Q 3")
     tablecolumns.push("Q 4")
     tablecolumns.push("Q 5")
+    tablecolumns.push("rating")
+    tablecolumns.push(" ")
+   // tablecolumns.push("  ")
 
     //Creating html table and adding class to it
     var tableemployee = document.createElement("table");
@@ -466,18 +465,22 @@ function convertJsontoHtmlTable(employess) {
             if (tablecolumns[j] == "Q 1") {
                 tabCell.innerHTML = employess[i].main_questions['1'];
             } else
-            if (tablecolumns[j] == "Q 2") {
-                tabCell.innerHTML = employess[i].main_questions['2'];
-            } else
-            if (tablecolumns[j] == "Q 3") {
-                tabCell.innerHTML = employess[i].main_questions['3'];
-            } else if (tablecolumns[j] == "Q 4") {
-                tabCell.innerHTML = employess[i].main_questions['4'];
-            } else if (tablecolumns[j] == "Q 5") {
-                tabCell.innerHTML = employess[i].main_questions['5'];
-            } else {
-                tabCell.innerHTML = employess[i][tablecolumns[j]];
-            }
+                if (tablecolumns[j] == "Q 2") {
+                    tabCell.innerHTML = employess[i].main_questions['2'];
+                } else
+                    if (tablecolumns[j] == "Q 3") {
+                        tabCell.innerHTML = employess[i].main_questions['3'];
+                    } else if (tablecolumns[j] == "Q 4") {
+                        tabCell.innerHTML = employess[i].main_questions['4'];
+                    } else if (tablecolumns[j] == "Q 5") {
+                        tabCell.innerHTML = employess[i].main_questions['5'];
+                    } else if (tablecolumns[j] == " ") {
+                        tabCell.innerHTML = `<button type="button" onclick="downloadResult('${employess[i].clinic_id}', '${employess[i].patient_id}', 'download')" class="btn btn-primary">Download</button>`
+                    } else if (tablecolumns[j] == "  ") {
+                        tabCell.innerHTML = `<button type="button" onclick="downloadResult('${employess[i].clinic_id}', '${employess[i].patient_id}', 'open')" class="btn btn-primary">Open</button>`
+                    } else {
+                        tabCell.innerHTML = employess[i][tablecolumns[j]];
+                    }
         }
     }
 
@@ -485,6 +488,83 @@ function convertJsontoHtmlTable(employess) {
     var employeedivcontainer = document.getElementById("employeedivcontainer");
     employeedivcontainer.innerHTML = "";
     employeedivcontainer.appendChild(tableemployee);
+}
+
+
+function downloadResult(cid, pid, openOrDownload) {
+    var options = {
+        fontSize: 14,
+        margins: {
+            left: 10,
+            right: 10,
+            top: 18,
+            bot: 10
+        }
+    };
+
+
+    const response = fetch(`/download-results?cid=${cid}&pid=${pid}`)
+        .then(response => response.json())
+        .then(data => {
+            data = data[0]
+
+            if (openOrDownload == 'open') {
+            //     Survey
+            //     .StylesManager
+            //     .applyTheme("defaultV2");
+        
+            // window.survey = new Survey.Model(json);
+        
+            // survey
+            //     .onComplete
+            //     .add(function (sender) {
+       
+  
+            //     });
+        
+            // //   survey.data = JSON.parse(data);
+            // //    survey.mode = 'display';
+        
+            // $("#surveyElement").Survey({ model: survey });
+
+
+
+                // delete data.clinic_id;
+                // delete data.patient_id;
+                // delete data._id;
+             ///   survey.data = data;
+             //   survey.mode = 'display';
+
+            } else {
+
+                //json is same as for SurveyJS Library
+                var surveyPDF = new SurveyPDF.SurveyPDF(json, options);
+                surveyPDF.data = data;
+                surveyPDF.haveCommercialLicense  = true;
+                //uncomment next code to add html and markdown text support
+                /*var converter = new showdown.Converter();
+                surveyPDF.onTextMarkdown.add(function(survey, options) {
+                    var str = converter.makeHtml(options.text);
+                    str = str.substring(3);
+                    str = str.substring(0, str.length - 4);
+                    options.html = str;
+                });*/
+
+                surveyPDF.onRenderHeader.add(function (_, canvas) {
+                    canvas.drawText({
+                        text:`${document.getElementById("clinic_name").value}, Patient Id=${pid}                                airwayassessment.azurewebsites.net`,
+                        fontSize: 10
+                    });
+                });
+                surveyPDF.save();
+
+            }
+
+
+
+        });
+
+
 }
 
 

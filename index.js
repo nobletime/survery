@@ -19,9 +19,9 @@ app.use(
   session({
     secret: "airway-assessment-csma",
     rolling: true,
-    resave: true, 
+    resave: true,
     saveUninitialized: false,
-    cookie: { maxAge: 3600000 , secret: true},
+    cookie: { maxAge: 3600000, secret: true },
   })
 );
 
@@ -43,11 +43,11 @@ const user = {
   passwordHash: 'Rest007!',
   id: 1
 }
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
   done(null, user);
 });
 
-passport.deserializeUser(function(user, done) {
+passport.deserializeUser(function (user, done) {
   done(null, user);
 });
 
@@ -55,7 +55,7 @@ passport.use(new LocalStrategy(
   (username, password, done) => {
     if (username.toLowerCase() != user.username)
       return done(null, false)
-    if (password  != user.password)
+    if (password != user.password)
       return done(null, false)
 
     return done(null, username)
@@ -85,11 +85,7 @@ app.get("/qrcode", async (req, res, next) => {
   if (req.query.cid) {
     const result = await mdb.findOne("onboarding", { clinic_id: req.query.cid });
     if (result == null) {
-      return res.render("qrcode", {
-        cid: "",
-        clinic_name: "NOT_FOUND",
-        result: ""
-      });
+      res.send(`<div style="text-align:center; font-size:20px"> <strong>Your clinic_id = ${req.query.cid} is not found. Likely because you have NOT been onboarded yet. Please contact the support!</strong>`)
     }
 
     res.render("qrcode", {
@@ -98,11 +94,7 @@ app.get("/qrcode", async (req, res, next) => {
       result: ""
     });
   } else {
-    res.render("qrcode", {
-      cid: "",
-      clinic_name: "",
-      result: ""
-    });
+    res.send(`<div style="text-align:center; font-size:20px"> <strong>You are not authorized to view this page. Please contact the support</strong>`)
   }
 
 });
@@ -217,13 +209,29 @@ app.get("/results", async (req, res, next) => {
   );
 });
 
+app.get("/download-results", async (req, res, next) => {
+  res.setHeader("Content-Type", "application/json");
+  const result = await mdb.find("results", { clinic_id: req.query.cid, patient_id: req.query.pid });
+  res.send(JSON.stringify(result)
+  );
+});
+
+
 app.get("/login", function (req, res, next) {
   req.logout();
   res.render("login");
 });
 
-app.get(["/", "/results/*"], function (req, res, next) {
-  res.render("index");
+app.get(["/", "/results/*"], async (req, res, next) => {
+  if (req.query.cid) {
+    const result = await mdb.findOne("onboarding", { clinic_id: req.query.cid });
+    if (result)
+      res.render("index");
+    else
+      res.send(`<div style="text-align:center; font-size:20px"> <strong>Your clinic_id = ${req.query.cid} is not found. Likely because you have NOT been onboarded yet. Please contact the support!</strong>`)
+  } else {
+    res.send(`<div style="text-align:center; font-size:20px"> <strong>You are not authorized to view this page. Please contact the support</strong>`)
+  }
 });
 
 

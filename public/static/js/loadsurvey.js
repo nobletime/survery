@@ -3,13 +3,13 @@ $(() => {
     const params = new URLSearchParams(window.location.search)
     let cid = "", pid = "";
 
-    if (params.has('cid')) {
+    if (params.has('cid') && params.has('pid')) {
         cid = params.get('cid');
-        json['clientId'] = cid
-    }
-
-    if (params.has('pid'))
         pid = params.get('pid');
+        json['clientId'] = cid
+    } else {
+        return 
+    }       
 
     Survey
         .StylesManager
