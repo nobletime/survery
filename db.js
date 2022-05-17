@@ -36,6 +36,24 @@ async function findOne(collection, query) {
     }
 };
 
+async function findAndModify(collection, query) {
+    const dbname = "survey";
+ 
+    const client = await MongoClient.connect(dburi, { useNewUrlParser: true });
+    const db = client.db(dbname);
+
+    try {
+        const result = await db.collection(collection).findOne(query);
+        return  result;
+    }
+    finally {
+        client.close();
+    }
+};
+
+
+{ $inc: { seq: 1 } }
+
 async function save(collection, obj) {
     const dbname = "survey";
  

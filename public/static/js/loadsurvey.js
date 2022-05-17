@@ -1,9 +1,11 @@
 $(() => {
 
     const params = new URLSearchParams(window.location.search)
-    let cid = "", pid = "";
+    let cid = "", pid = "", cname="";
 
-    if (params.has('cid') && params.has('pid')) {
+    if (params.has('cid') && params.has('pid')) {   
+        cname = document.getElementById("cname").innerHTML;
+        console.log(cname);
         cid = params.get('cid');
         pid = params.get('pid');
         json['clientId'] = cid
@@ -22,7 +24,9 @@ $(() => {
         .add(function (sender) {
             let surveydata = sender.data;
             surveydata.clinic_id = cid
+            surveydata.clinic_name = cname
             surveydata.patient_id = pid
+            surveydata.date = new Date(moment(new Date()).format('MM/DD/YYYY'));
 
             fetch("/save", {
                 method: "POST",

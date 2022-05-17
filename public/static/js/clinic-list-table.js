@@ -1,37 +1,44 @@
 var editor; // use a global for the submit and return data rendering in the examples
+var table;
 
 $(document).ready(function () {
 	editor = new $.fn.dataTable.Editor({
 		ajax: "/clinic-list",
 		table: "#clinic-list-table",
-		fields: [ {
-			label: "Clinic ID:",
-			name: "clinic_id",  
-		},{
+		fields: [{
+			label: "Clinic Id:",
+			name: "clinic_id"
+		}, {
 			label: "Clinic Name:",
 			name: "clinic_name"
-		}, 	{
+		}, {
+			label: "Clinic Type:",
+			name: "clinic_type"
+		},
+		{
 			label: "Clinic Address:",
-			name: "clinic_address"
-		},{ 
-		label: "Clinician:",
-		name: "clinician"
-	},	
-		{ 
-		label: "Phone Number:",
-		name: "phone_number"
-	},		
-		{ 	
+			name: "clinic_address",
+			type: 'textarea'
+		}, {
+			label: "Clinician:",
+			name: "clinician"
+		},
+		{
+			label: "Phone Number:",
+			name: "phone_number"
+		},
+		{
 			label: "Email:",
 			name: "email"
 		},
-		{ 
-		label: "Contact Person:",
-		name: "contact_person" },	
+		{
+			label: "Contact Person:",
+			name: "contact_person"
+		},
 		{
 			label: "Created Date:",
 			name: "created_date",
-			type:"datetime",
+			type: "datetime",
 			format: 'MM/DD/YYYY'
 		},
 		{
@@ -42,7 +49,7 @@ $(document).ready(function () {
 				{ label: "Yes", value: "Yes" },
 				{ label: "No", value: "No" },
 			]
-		}
+		},
 
 		],
 		// formOptions: {
@@ -73,7 +80,7 @@ $(document).ready(function () {
 	// 	}
 	// );
 
-	var table = $('#clinic-list-table').DataTable({
+	 table = $('#clinic-list-table').DataTable({
 		dom: "Bfrtip",
 		ajax: "/clinic-list",
 		"pageLength": 50,
@@ -85,14 +92,20 @@ $(document).ready(function () {
 			//     orderable: false
 			// },
 			{ data: "clinic_id" },
-			{ data: "clinic_name" },
-			{ data: "clinic_address" },		
-			{ data: "doctor_name" , "defaultContent": "<i>Null</i>"},	
-			{ data: "phone_number" , "defaultContent": "<i>Null</i>"},		
-			{ data: "email", "defaultContent": "<i>Null</i>" },
-			{ data: "contact_person", "defaultContent": "<i>Null</i>" },	
-			{ data: "created_date" },
-			{ data: "Active", "defaultContent": "Yes" },
+			{ data: "clinic_name", "defaultContent": "" },
+			{ data: "clinic_type", "defaultContent": "" },
+			{ data: "clinic_address", "defaultContent": "" },
+			{ data: "clinician", "defaultContent": "" },
+			{ data: "phone_number", "defaultContent": "" },
+			{ data: "email", "defaultContent": "" },
+			{ data: "contact_person", "defaultContent": "" },
+			{ data: "created_date", "defaultContent": "" },
+			{ data: "active", "defaultContent": "Yes" },
+			{
+				data: "qrcode_link", render: function (data, type, row) {
+					return  `<a target="_blank" href="/qrcode?cid=${row.clinic_id}">Browse</a>`;
+				}
+			},
 		],
 		order: [1, 'asc'],
 		keys: {
@@ -118,27 +131,27 @@ $(document).ready(function () {
 	});
 
 	// $('#clinic-list-table tbody').on( 'click', 'tr', function () {
-    //     if ( $(this).hasClass('selected') ) {
-    //         $(this).removeClass('selected');
-    //     }
-    //     else {
-    //         table.$('tr.selected').removeClass('selected');
-    //         $(this).addClass('selected');
-    //     }
-    // } );
+	//     if ( $(this).hasClass('selected') ) {
+	//         $(this).removeClass('selected');
+	//     }
+	//     else {
+	//         table.$('tr.selected').removeClass('selected');
+	//         $(this).addClass('selected');
+	//     }
+	// } );
 
 
 	// $('#clinic-list-table').on('click', 'tbody td:not(:first-child)', function (e) {
 	// 	editor.inline(this);
 	// });
 
-		
-//	$('#clinic-list-table').off( 'click', 'tbody td:not(:first-child)' );
 
-editor.on('preSubmit', function (e, datacontent, action) {debugger;
-	if (action == "create") {
-		datacontent.data[0].clinic_id = datacontent.data[0].clinic_id.toLocaleLowerCase()
-	}
-})
+	//	$('#clinic-list-table').off( 'click', 'tbody td:not(:first-child)' );
+
+	editor.on('preSubmit', function (e, datacontent, action) {
+		if (action == "create") {
+			datacontent.data[0].clinic_id = datacontent.data[0].clinic_id.toLocaleLowerCase().trim()
+		}
+	})
 
 });

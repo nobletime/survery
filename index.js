@@ -63,11 +63,11 @@ passport.use(new LocalStrategy({
     if (password != user.password)
       return done(null, false, req.flash('message', 'Wrong Credential'))
 
-      if(req.body.remember){
-        req.session.cookie.maxAge = 5400000 ;
-      } else {
-        req.session.cookie.maxAge = 300000 
-      }
+    if (req.body.remember) {
+      req.session.cookie.maxAge = 5400000;
+    } else {
+      req.session.cookie.maxAge = 300000
+    }
     return done(null, username)
   }
 ))
@@ -180,8 +180,6 @@ app.post('/save', async (req, res) => {
   res.send("Save successful")
 })
 
-
-
 app.post("/scan", async (req, res, next) => {
   const cid = req.body.cid;
   const pid = req.body.pid;
@@ -213,7 +211,8 @@ app.post("/scan", async (req, res, next) => {
 
 app.get("/results", async (req, res, next) => {
   res.setHeader("Content-Type", "application/json");
-  const result = await mdb.find("results", { clinic_id: req.query.cid });
+  const query = (req.query.cid)? { clinic_id: req.query.cid } : {}
+  const result = await mdb.find("results", query);
   res.send(JSON.stringify(result)
   );
 });
@@ -236,7 +235,7 @@ app.get(["/", "/results/*"], async (req, res, next) => {
   if (req.query.cid) {
     const result = await mdb.findOne("onboarding", { clinic_id: req.query.cid });
     if (result)
-      res.render("index");
+      res.render("index", {cname: result.clinic_name});
     else
       res.send(`<div style="text-align:center; font-size:20px"> <strong>Your clinic_id = ${req.query.cid} is not found. Likely because you have NOT been onboarded yet. Please contact the support!</strong>`)
   } else {
