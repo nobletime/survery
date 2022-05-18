@@ -133,8 +133,8 @@ app.post('/clinic-list', async (req, res) => {
   switch (req.body.action) {
     case 'create':
       let obj = data[0];
+      obj.clinic_id = new Date().getTime().toString();
       result = await mdb.save("onboarding", obj);
-
       templateTData.data = [obj];
       obj['DT_RowId'] = obj._id.toString();
       res.send(JSON.stringify(templateTData));

@@ -5,10 +5,7 @@ $(document).ready(function () {
 	editor = new $.fn.dataTable.Editor({
 		ajax: "/clinic-list",
 		table: "#clinic-list-table",
-		fields: [{
-			label: "Clinic Id:",
-			name: "clinic_id"
-		}, {
+		fields: [ {
 			label: "Clinic Name:",
 			name: "clinic_name"
 		}, {
@@ -148,10 +145,10 @@ $(document).ready(function () {
 
 	//	$('#clinic-list-table').off( 'click', 'tbody td:not(:first-child)' );
 
-	editor.on('preSubmit', function (e, datacontent, action) {
-		if (action == "create") {
-			datacontent.data[0].clinic_id = datacontent.data[0].clinic_id.toLocaleLowerCase().trim()
-		}
-	})
+	// editor.on('preSubmit', function (e, datacontent, action) {
+	// 	if (action == "create") {
+	// 		datacontent.data[0].clinic_id = datacontent.data[0].clinic_id.toLowerCase().trim()
+	// 	}
+	// })
 
 });

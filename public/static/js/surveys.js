@@ -381,7 +381,6 @@ const json = {
 function getResultLink() {
     //document.getElementById("result_link").href=`/result?cid=${document.getElementById("cid").value}&pid=${document.getElementById("pid").value}`; 
 
-
     $.get(`/results?cid=${document.getElementById("cid").value}`, function (data) {
         Survey
             .StylesManager
