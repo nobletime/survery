@@ -111,7 +111,8 @@ app.get("/qrcode", async (req, res, next) => {
 });
 
 app.get("/register", (req, res, next) => {
-  res.render("registeration", {message:""
+  res.render("registeration", {
+    message: ""
 
   });
 });
@@ -121,21 +122,30 @@ app.post("/clinic-registeration", async (req, res, next) => {
   let obj = req.body;
   obj.clinic_id = new Date().getTime().toString();
   obj.created_date = new Date();
+  obj.active = "Pending";
   const result = await mdb.save("onboarding", obj);
-  let subject = "C-GASP Screener Service Registeration";
+  res.send("Sign up successful! Your application is under revew. You should recieve an Email C-GASP Screener Service Registeration that contains link to your C-GASP Screener form generator.");
+  
+  let subject = "Your C-GASP Screener Application has been recieved";
   const pass = 'CsmaTraker1999';
-  const surveylink = `https://airwayassessment.azurewebsites.net/qrcode?cid=${obj.clinic_id}`
-  const body = `Your C-GASP Screener Service link to generate QR-Code and view survey results is below:<br/><a href="${surveylink}">${surveylink}</a>`;
+  const body = `Your application is under revew. You should recieve an Email C-GASP Screener Service Registeration that contains link to your C-GASP Screener form generator.`;
   await send365Email('CSMA-Tracker@csma.clinic', [obj.email.toLowerCase()], subject, body, "Rest Tracker Report", pass, null);
 
-  res.render("registeration", {message: "Sign up successful! Check your link for QRcode."
+  const form_info = JSON.stringify(obj, null, 4)
+  await send365Email('CSMA-Tracker@csma.clinic', ['sam@resttech.pro', 'jsimmonsmd@csma.clinic'], 'Recieved C-GASP Onboaring Request', form_info, "Rest Tracker Report", pass, null);
 
-  });
+  // res.render("registeration", {
+  //   message: "Sign up successful! Check your link for QRcode."
+
+  // });
+
+
 });
 
 
 app.get("/onboarding", isAuthenticated, (req, res, next) => {
-  res.render("onboarding", {message:""
+  res.render("onboarding", {
+    message: ""
 
   });
 });
@@ -183,6 +193,15 @@ app.post('/clinic-list', async (req, res) => {
       templateTData.data = [datatmp];
       res.send(JSON.stringify(templateTData));
 
+
+      const record = await mdb.findOne("onboarding", query);
+      if (datatmp.active == "Yes") {
+        let subject = "C-GASP Screener Service Registeration";
+        const pass = 'CsmaTraker1999';
+        const surveylink = `https://airwayassessment.azurewebsites.net/qrcode?cid=${record.clinic_id}`
+        const body = `Your C-GASP Screener Service link to generate QR-Code and view survey results is below:<br/><a href="${surveylink}">${surveylink}</a>`;
+        await send365Email('CSMA-Tracker@csma.clinic', [record.email.toLowerCase()], subject, body, "Rest Tracker Report", pass, null);
+      }
 
       break;
 
@@ -235,7 +254,7 @@ app.post("/scan", async (req, res, next) => {
 
 app.get("/results", async (req, res, next) => {
   res.setHeader("Content-Type", "application/json");
-  const query = (req.query.cid)? { clinic_id: req.query.cid } : {}
+  const query = (req.query.cid) ? { clinic_id: req.query.cid } : {}
   const result = await mdb.find("results", query);
   res.send(JSON.stringify(result)
   );
@@ -259,7 +278,7 @@ app.get(["/", "/results/*"], async (req, res, next) => {
   if (req.query.cid) {
     const result = await mdb.findOne("onboarding", { clinic_id: req.query.cid });
     if (result)
-      res.render("index", {cname: result.clinic_name});
+      res.render("index", { cname: result.clinic_name });
     else
       res.send(`<div style="text-align:center; font-size:20px"> <strong>Your clinic_id = ${req.query.cid} is not found. Likely because you have NOT been onboarded yet. Please contact the support!</strong>`)
   } else {

@@ -44,6 +44,7 @@ $(document).ready(function () {
 			type: "select",
 			options: [
 				{ label: "Yes", value: "Yes" },
+				{ label: "Pending", value: "Pending" },
 				{ label: "No", value: "No" },
 			]
 		},
@@ -97,7 +98,7 @@ $(document).ready(function () {
 			{ data: "email", "defaultContent": "" },
 			{ data: "contact_person", "defaultContent": "" },
 			{ data: "created_date", "defaultContent": "" },
-			{ data: "active", "defaultContent": "Yes" },
+			{ data: "active", "defaultContent": "Pending" },
 			{
 				data: "qrcode_link", render: function (data, type, row) {
 					return  `<a target="_blank" href="/qrcode?cid=${row.clinic_id}">Browse</a>`;
