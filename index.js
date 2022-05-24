@@ -189,7 +189,7 @@ app.post("/clinic-registeration", async (req, res, next) => {
   `;
 
   //, 'jsimmonsmd@csma.clinic'
-  await send365Email('CSMA-Tracker@csma.clinic', ['sam@resttech.pro'], `Recieved C-GASP Onboaring Request from ${obj.email}`, form_info, "Rest Tracker Report", pass, null);
+  await send365Email('CSMA-Tracker@csma.clinic', ['sam@resttech.pro', 'jsimmonsmd@csma.clinic'], `Recieved C-GASP Onboaring Request from ${obj.email}`, form_info, "Rest Tracker Report", pass, null);
 
   // res.render("registeration", {
   //   message: "Sign up successful! Check your link for QRcode."
