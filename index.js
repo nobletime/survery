@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs')
 const LocalStrategy = require('passport-local')
 const flash = require('connect-flash');
 const mdb = require("./db");
-const { send365Email } = require("./email");
+const { send365Email, sendGmail } = require("./email");
 const { ObjectId } = require('mongodb');
 const moment = require('moment');
 
@@ -137,7 +137,9 @@ app.post("/clinic-registeration", async (req, res, next) => {
   let subject = "Your C-GASP Screener Application has been received";
   const pass = 'CsmaTraker1999';
   const body = ` Your application is under revew and should be approved within 24 hours. Once approved, you will receive an Email with subject line "C-GASP Screener Service Registeration" that contains link to your C-GASP Screener form generator.`;
-  await send365Email('CSMA-Tracker@csma.clinic', [obj.email.toLowerCase()], subject, body, "Rest Tracker Report", pass, null);
+  
+ // return await sendGmail([obj.email.toLowerCase()], subject, body,null);
+  await send365Email([obj.email.toLowerCase()], subject, body, "Rest Tracker Report", pass, null);
 
   const form_info = `
   <html>
@@ -199,6 +201,10 @@ app.post("/clinic-registeration", async (req, res, next) => {
 
 });
 
+app.get("/deleteresults", isAuthenticated, async (req, res, next)=> {
+  const result = await mdb.deleteMany("results", { });
+  res.send("Deleted");
+});
 
 app.get("/onboarding", isAuthenticated, (req, res, next) => {
   res.render("onboarding", {
@@ -309,6 +315,8 @@ app.post("/scan", async (req, res, next) => {
 
 });
 
+
+
 app.get("/results", async (req, res, next) => {
   res.setHeader("Content-Type", "application/json");
   const query = (req.query.cid) ? { clinic_id: req.query.cid } : {}
@@ -323,7 +331,6 @@ app.get("/download-results", async (req, res, next) => {
   res.send(JSON.stringify(result)
   );
 });
-
 
 app.get("/login", function (req, res, next) {
   req.logout();

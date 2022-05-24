@@ -4,10 +4,10 @@ const { ObjectId } = require('mongodb');
 const MongoClient = require('mongodb').MongoClient;
 const { ConnectionClosedEvent } = require('mongodb');
 
+const dbname = "survey";
 const dburi = 'mongodb+srv://azureserver:Rest007@rest.ms872.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 
 async function find(collection, query) {
-    const dbname = "survey";
  
     const client = await MongoClient.connect(dburi, { useNewUrlParser: true });
     const db = client.db(dbname);
@@ -22,7 +22,6 @@ async function find(collection, query) {
 };
 
 async function findOne(collection, query) {
-    const dbname = "survey";
  
     const client = await MongoClient.connect(dburi, { useNewUrlParser: true });
     const db = client.db(dbname);
@@ -37,7 +36,6 @@ async function findOne(collection, query) {
 };
 
 async function findAndModify(collection, query) {
-    const dbname = "survey";
  
     const client = await MongoClient.connect(dburi, { useNewUrlParser: true });
     const db = client.db(dbname);
@@ -52,10 +50,9 @@ async function findAndModify(collection, query) {
 };
 
 
-{ $inc: { seq: 1 } }
+//{ $inc: { seq: 1 } }
 
 async function save(collection, obj) {
-    const dbname = "survey";
  
     const client = await MongoClient.connect(dburi, { useNewUrlParser: true });
     const db = client.db(dbname);
@@ -70,7 +67,6 @@ async function save(collection, obj) {
 };
 
 async function deleteOne(collection, query) {
-    const dbname = "survey";
  
     const client = await MongoClient.connect(dburi, { useNewUrlParser: true });
     const db = client.db(dbname);
@@ -84,9 +80,22 @@ async function deleteOne(collection, query) {
     }
 };
 
-async function updateOne(collection, query, newvalues) {
-    const dbname = "survey";
+async function deleteMany(collection, query) {
  
+    const client = await MongoClient.connect(dburi, { useNewUrlParser: true });
+    const db = client.db(dbname);
+
+    try {
+        const result = await db.collection(collection).deleteMany(query);
+        return  result;
+    }
+    finally {
+        client.close();
+    }
+};
+
+async function updateOne(collection, query, newvalues) {
+
     const client = await MongoClient.connect(dburi, { useNewUrlParser: true });
     const db = client.db(dbname);
 
@@ -99,9 +108,9 @@ async function updateOne(collection, query, newvalues) {
     }
 };
 
-
 module.exports.find = find
 module.exports.findOne = findOne
 module.exports.save = save
 module.exports.deleteOne = deleteOne
+module.exports.deleteMany = deleteMany
 module.exports.updateOne = updateOne

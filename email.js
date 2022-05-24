@@ -47,4 +47,55 @@ async function send365Email(from, to, subject, html, text, pass, files) {
   }
 }
 
+
+async function sendGmail(to, subject, html, files) {
+
+const from = "autocheckreportvehicle@gmail.com";
+  try {
+    const transportOptions = {
+        service: 'gmail',
+        auth: {
+          user: 'autocheckreportvehicle',
+          pass: '#Autocheck5000'
+        }
+    };
+
+    const mailTransport = nodemailer.createTransport(transportOptions);
+
+    if (files == null) {
+      await mailTransport.sendMail({
+        from,
+        to,
+        replyTo: from,
+        subject,
+        html
+      });
+    } else {
+      let attachments = [];
+      files.forEach(f => {
+        attachments.push({
+          filename: f.filename,
+          path: f.path,
+          contentType: 'application/pdf'
+        });
+      })
+
+      await mailTransport.sendMail({
+        from,
+        to,
+        replyTo: from,
+        subject,
+        html,
+        // text,
+        attachments: attachments
+      });
+
+    }
+
+  } catch (err) {
+    console.error(`sendGmail: An error occurred:`, err);
+  }
+}
+
 module.exports.send365Email = send365Email
+module.exports.sendGmail = sendGmail

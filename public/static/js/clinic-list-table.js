@@ -97,7 +97,10 @@ $(document).ready(function () {
 			{ data: "phone_number", "defaultContent": "" },
 			{ data: "email", "defaultContent": "" },
 			{ data: "contact_person", "defaultContent": "" },
-			{ data: "created_date", "defaultContent": "" },
+			{ data: "created_date", "defaultContent": "" , render: function (data, type, row) {
+				return moment(new Date(data)).format("MM/DD/YYYY")
+
+			}},
 			{
 				data: "active", "defaultContent": "Pending", render: function (data, type, row) {
 					if (row.active == "Yes"){
