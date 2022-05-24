@@ -90,6 +90,8 @@ app.post('/signin', passport.authenticate('local', {
 }))
 
 
+
+
 app.get("/qrcode", async (req, res, next) => {
   if (req.query.cid) {
     const result = await mdb.findOne("onboarding", { clinic_id: req.query.cid });
@@ -108,10 +110,32 @@ app.get("/qrcode", async (req, res, next) => {
 
 });
 
+app.get("/register", (req, res, next) => {
+  res.render("registeration", {message:""
+
+  });
+});
+
+
+app.post("/clinic-registeration", async (req, res, next) => {
+  let obj = req.body;
+  obj.clinic_id = new Date().getTime().toString();
+  obj.created_date = new Date();
+  const result = await mdb.save("onboarding", obj);
+  let subject = "C-GASP Screener Service Registeration";
+  const pass = 'CsmaTraker1999';
+  const surveylink = `https://airwayassessment.azurewebsites.net/qrcode?cid=${obj.clinic_id}`
+  const body = `Your C-GASP Screener Service link to generate QR-Code and view survey results is below:<br/><a href="${surveylink}">${surveylink}</a>`;
+  await send365Email('CSMA-Tracker@csma.clinic', [obj.email.toLowerCase()], subject, body, "Rest Tracker Report", pass, null);
+
+  res.render("registeration", {message: "Sign up successful! Check your link for QRcode."
+
+  });
+});
 
 
 app.get("/onboarding", isAuthenticated, (req, res, next) => {
-  res.render("onboarding", {
+  res.render("onboarding", {message:""
 
   });
 });
