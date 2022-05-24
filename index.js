@@ -120,7 +120,7 @@ app.get("/register", (req, res, next) => {
 
 
 app.get("/signup-successful", (req, res, next) => {
-  res.send(`<br/><br/>   Your account is created. Your application is under revew and should be approved within 24 hours. Once approved, you will receive an Email with subject line "C-GASP Screener Service Registeration" that contains link to your C-GASP Screener form generator.`);
+  res.send(`<br/><br/>   Your C-GASP Screener Application has been received. Your application is under revew and should be approved within 24 hours. Once approved, you will receive an Email with subject line "C-GASP Screener Service Registeration" that contains link to your C-GASP Screener form generator.`);
 
 });
 
@@ -134,9 +134,9 @@ app.post("/clinic-registeration", async (req, res, next) => {
   const result = await mdb.save("onboarding", obj);
    res.redirect("/signup-successful");
 
-  let subject = "Your C-GASP Screener Application has been recieved";
+  let subject = "Your C-GASP Screener Application has been received";
   const pass = 'CsmaTraker1999';
-  const body = ` Your account is created. Your application is under revew and should be approved within 24 hours. Once approved, you will recieve an Email with subject line "C-GASP Screener Service Registeration" that contains link to your C-GASP Screener form generator.`;
+  const body = ` Your application is under revew and should be approved within 24 hours. Once approved, you will receive an Email with subject line "C-GASP Screener Service Registeration" that contains link to your C-GASP Screener form generator.`;
   await send365Email('CSMA-Tracker@csma.clinic', [obj.email.toLowerCase()], subject, body, "Rest Tracker Report", pass, null);
 
   const form_info = `
@@ -189,7 +189,7 @@ app.post("/clinic-registeration", async (req, res, next) => {
   `;
 
   //, 'jsimmonsmd@csma.clinic'
-  await send365Email('CSMA-Tracker@csma.clinic', ['sam@resttech.pro', 'jsimmonsmd@csma.clinic'], `Recieved C-GASP Onboaring Request from ${obj.email}`, form_info, "Rest Tracker Report", pass, null);
+  await send365Email('CSMA-Tracker@csma.clinic', ['sam@resttech.pro', 'jsimmonsmd@csma.clinic'], `Received C-GASP Onboaring Request from ${obj.email}`, form_info, "Rest Tracker Report", pass, null);
 
   // res.render("registeration", {
   //   message: "Sign up successful! Check your link for QRcode."
