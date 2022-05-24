@@ -58,15 +58,23 @@
 										required>
 									<label class="form-control-placeholder" for="clinic_type">Clinic Type</label> -->
 									<label for="clinic_type">Clinic Type:</label>
-									<select class="form-select" id="clinic_type" name="clinic_type" style="width:200px;margin-left:10px">
-										<option>General Denistry</option>
-										<option>Pediatric Dentstry</option>
-
+									<select class="form-select form-select-sm"  aria-label=".form-select-sm example" id="clinic_type" name="clinic_type" style="width:200px;margin-left:5px">
+										<option value="General Denistry">General Denistry</option>
+										<option value="Pediatric Dentistry">Pediatric Dentistry</option>
+										<option>General Orthodontics</option>
+										<option>Pediatric Orthodontics</option>
+										<option>Myofunctional Therapist</option>
+										<option>Family Practice</option>
+										<option>Neurology</option>
+										<option>Pulmonary</option>
+										<option>Pediatric Pulmonary</option>
+										<option>Other (medical)</option>
+										<option>Other (non-medical)</option>
 									  </select>
 
 								</div>
 								<div class="form-group">
-									<textarea id="clinic_address" name="clinic_address" rows="3" cols="40" placeholder="Clinic Address"></textarea>
+									<textarea id="clinic_address" name="clinic_address" rows="4" cols="40" placeholder="Clinic Address" requird></textarea>
 									<!-- <input type="text" class="form-control" id="clinic_address" name="clinic_address"
 										required> -->
 									<!-- <label class="form-control-placeholder" for="clinic_address">Clinic Address</label> -->

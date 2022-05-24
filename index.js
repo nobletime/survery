@@ -8,6 +8,7 @@ const flash = require('connect-flash');
 const mdb = require("./db");
 const { send365Email } = require("./email");
 const { ObjectId } = require('mongodb');
+const moment = require('moment');
 
 const ejs = require("ejs");
 const path = require("path");
@@ -118,21 +119,77 @@ app.get("/register", (req, res, next) => {
 });
 
 
+app.get("/signup-successful", (req, res, next) => {
+  res.send(`<br/><br/>   Your account is created. Your application is under revew and should be approved within 24 hours. Once approved, you will receive an Email with subject line "C-GASP Screener Service Registeration" that contains link to your C-GASP Screener form generator.`);
+
+});
+
+
+
 app.post("/clinic-registeration", async (req, res, next) => {
   let obj = req.body;
   obj.clinic_id = new Date().getTime().toString();
   obj.created_date = new Date();
   obj.active = "Pending";
   const result = await mdb.save("onboarding", obj);
-  res.send("Sign up successful! Your application is under revew. You should recieve an Email C-GASP Screener Service Registeration that contains link to your C-GASP Screener form generator.");
-  
+   res.redirect("/signup-successful");
+
   let subject = "Your C-GASP Screener Application has been recieved";
   const pass = 'CsmaTraker1999';
-  const body = `Your application is under revew. You should recieve an Email C-GASP Screener Service Registeration that contains link to your C-GASP Screener form generator.`;
+  const body = ` Your account is created. Your application is under revew and should be approved within 24 hours. Once approved, you will recieve an Email with subject line "C-GASP Screener Service Registeration" that contains link to your C-GASP Screener form generator.`;
   await send365Email('CSMA-Tracker@csma.clinic', [obj.email.toLowerCase()], subject, body, "Rest Tracker Report", pass, null);
 
-  const form_info = JSON.stringify(obj, null, 4)
-  await send365Email('CSMA-Tracker@csma.clinic', ['sam@resttech.pro', 'jsimmonsmd@csma.clinic'], 'Recieved C-GASP Onboaring Request', form_info, "Rest Tracker Report", pass, null);
+  const form_info = `
+  <html>
+  <head>
+  <style>
+  #clinic {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  #clinic td, #clinic th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  #clinic tr:nth-child(even){background-color: #f2f2f2;}
+  
+  #clinic tr:hover {background-color: #ddd;}
+  
+  #clinic th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #04AA6D;
+    color: white;
+  }
+  </style>
+  </head>
+
+
+<body>
+  <table id ="clinic">
+  <tr><td>Clinic Name</td><td>${obj.clinic_name}</td></tr>
+  <tr><td>clinic_type</td><td>${obj.clinic_type}</td></tr>
+  <tr><td>clinic_address</td><td>${obj.clinic_address}</td></tr>
+  <tr><td>clinician</td><td>${obj.clinician}</td></tr>
+  <tr><td>phone_number</td><td>${obj.phone_number}</td></tr>
+  <tr><td>email</td><td>${obj.email}</td></tr>
+  <tr><td>contact_person</td><td>${obj.contact_person}</td></tr>
+  <tr><td>created_date</td><td>${moment(new Date(obj.created_date)).format("MM/DD/YYYY")}</td></tr>
+</table>
+
+<br/><br/>
+  onboarding link : <a href= "${req.protocol}://${req.get('host')}/onboarding">${req.protocol}://${req.get('host')}/onboarding</a>
+
+  </body>
+  </html>
+  `;
+
+  //, 'jsimmonsmd@csma.clinic'
+  await send365Email('CSMA-Tracker@csma.clinic', ['sam@resttech.pro'], `Recieved C-GASP Onboaring Request from ${obj.email}`, form_info, "Rest Tracker Report", pass, null);
 
   // res.render("registeration", {
   //   message: "Sign up successful! Check your link for QRcode."
@@ -176,7 +233,7 @@ app.post('/clinic-list', async (req, res) => {
       let subject = "C-GASP Screener Service Registeration";
       const pass = 'CsmaTraker1999';
       const surveylink = `https://airwayassessment.azurewebsites.net/qrcode?cid=${obj.clinic_id}`
-      const body = `Your C-GASP Screener Service link to generate QR-Code and view survey results is below:<br/><a href="${surveylink}">${surveylink}</a>`;
+      const body = `Your C-GASP Screener Service link to generate C-GASP Screener and view the results is below:<br/><a href="${surveylink}">${surveylink}</a>`;
       await send365Email('CSMA-Tracker@csma.clinic', [obj.email.toLowerCase()], subject, body, "Rest Tracker Report", pass, null);
 
       break;

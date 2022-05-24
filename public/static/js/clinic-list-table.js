@@ -5,7 +5,7 @@ $(document).ready(function () {
 	editor = new $.fn.dataTable.Editor({
 		ajax: "/clinic-list",
 		table: "#clinic-list-table",
-		fields: [ {
+		fields: [{
 			label: "Clinic Name:",
 			name: "clinic_name"
 		}, {
@@ -78,7 +78,7 @@ $(document).ready(function () {
 	// 	}
 	// );
 
-	 table = $('#clinic-list-table').DataTable({
+	table = $('#clinic-list-table').DataTable({
 		dom: "Bfrtip",
 		ajax: "/clinic-list",
 		"pageLength": 50,
@@ -98,10 +98,23 @@ $(document).ready(function () {
 			{ data: "email", "defaultContent": "" },
 			{ data: "contact_person", "defaultContent": "" },
 			{ data: "created_date", "defaultContent": "" },
-			{ data: "active", "defaultContent": "Pending" },
+			{
+				data: "active", "defaultContent": "Pending", render: function (data, type, row) {
+					if (row.active == "Yes"){
+						return `<b style="color:green">${row.active}</b>`;
+					} else if (row.active == "Pending"){
+						return `<b style="color:red">${row.active}</b>`;
+					} else if (row.active == "No"){
+						return `<b style="color:black">${row.active}</b>`;					
+					} else {
+						return `<b style="color:red">Pending</b>`;
+					}
+					
+				}
+			},
 			{
 				data: "qrcode_link", render: function (data, type, row) {
-					return  `<a target="_blank" href="/qrcode?cid=${row.clinic_id}">Browse</a>`;
+					return `<a target="_blank" href="/qrcode?cid=${row.clinic_id}">Browse</a>`;
 				}
 			},
 		],
