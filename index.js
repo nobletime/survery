@@ -262,7 +262,7 @@ app.post('/clinic-list', async (req, res) => {
         let subject = "C-GASP Screener Service Registeration";
         const pass = 'CsmaTraker1999';
         const surveylink = `https://airwayassessment.azurewebsites.net/qrcode?cid=${record.clinic_id}`
-        const body = `Your C-GASP Screener Service link to generate QR-Code and view survey results is below:<br/><a href="${surveylink}">${surveylink}</a>`;
+        const body = `Here's link to generate C-GASP Screener and view survey results :<br/><a href="${surveylink}">${surveylink}</a>`;
         await send365Email('CSMA-Tracker@csma.clinic', [record.email.toLowerCase()], subject, body, "Rest Tracker Report", pass, null);
       }
 
