@@ -336,9 +336,15 @@ app.get("/login", function (req, res, next) {
 
 app.get(["/", "/results/*"], async (req, res, next) => {
   if (req.query.cid) {
-    const result = await mdb.findOne("onboarding", { clinic_id: req.query.cid });
-    if (result)
-      res.render("index", { cname: result.clinic_name });
+    const user = await mdb.findOne("onboarding", { clinic_id: req.query.cid });
+    if (user){
+      const result = await mdb.findOne("results", { patient_id: req.query.pid });
+      if (result){
+        res.render("index", { cname: user.clinic_name, alreadytaken: true });
+      } else {
+      res.render("index", { cname: user.clinic_name, alreadytaken : false });
+      }
+    }
     else
       res.send(`<div style="text-align:center; font-size:20px"> <strong>Your clinic_id = ${req.query.cid} is not found. Likely because you have NOT been onboarded yet. Please contact the support!</strong>`)
   } else {
@@ -346,7 +352,6 @@ app.get(["/", "/results/*"], async (req, res, next) => {
     // res.send(`<div style="text-align:center; font-size:20px"> <strong>You are not authorized to view this page. Please contact the support</strong>`)
   }
 });
-
 
 
 app.listen(process.env.PORT || 3040, function () {
