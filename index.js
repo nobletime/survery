@@ -24,7 +24,7 @@ app.use(
     rolling: true,
     resave: true,
     saveUninitialized: false,
-    cookie: { maxAge: 5400000, secret: true },
+    cookie: { maxAge: 21600000, secret: true },
   })
 );
 
@@ -64,11 +64,8 @@ passport.use(new LocalStrategy({
     if (password != user.password)
       return done(null, false, req.flash('message', 'Wrong Credential'))
 
-    if (req.body.remember) {
-      req.session.cookie.maxAge = 5400000;
-    } else {
-      req.session.cookie.maxAge = 300000
-    }
+      req.session.cookie.maxAge = 21600000 ;
+    
     return done(null, username)
   }
 ))
