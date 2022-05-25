@@ -63,7 +63,7 @@
 							  <h5 data-bind="css: css.description" class="sd-description">
 								<!-- ko template: { name: 'survey-string', data: locDescription } -->
 							  <!-- ko component: { name: renderAs, params: { locString: renderAsData } } --><!-- ko ifnot: locString.koHasHtml -->
-						  <span class="sv-string-viewer" data-bind="text: locString.koRenderedHtml" style="font-size: 14px;">Children’s General Airway Screening Protocol. Developed by the Children’s Airway Screener Taskforce (CAST) committee of the ADA</span>
+						  <span class="sv-string-viewer" data-bind="text: locString.koRenderedHtml" style="font-size: 14px;">Children’s General Airway Screening Protocol. Developed by the <br/>Children’s Airway Screener Taskforce (CAST) committee of the ADA</span>
 						  <!-- /ko -->
 						  <!-- ko if: locString.koHasHtml --><!-- /ko --><!-- /ko -->
 						  <!-- /ko -->
@@ -96,7 +96,9 @@
 										<option>Pediatric Orthodontics</option>
 										<option>Myofunctional Therapist</option>
 										<option>Family Practice</option>
+										<option>Pediatric Medicine</option>
 										<option>Neurology</option>
+										<option>Pediatric Neurology</option>
 										<option>Pulmonary</option>
 										<option>Pediatric Pulmonary</option>
 										<option>Other (medical)</option>
