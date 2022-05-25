@@ -139,7 +139,7 @@ app.post("/clinic-registeration", async (req, res, next) => {
   const body = ` Your application is under revew and should be approved within 24 hours. Once approved, you will receive an Email with subject line "C-GASP Screener Service Registeration" that contains link to your C-GASP Screener form generator.`;
   
  // return await sendGmail([obj.email.toLowerCase()], subject, body,null);
-  await send365Email([obj.email.toLowerCase()], subject, body, "Rest Tracker Report", pass, null);
+  await send365Email( 'CSMA-Tracker@csma.clinic',[obj.email.toLowerCase()], subject, body, "Rest Tracker Report", pass, null);
 
   const form_info = `
   <html>
@@ -259,10 +259,10 @@ app.post('/clinic-list', async (req, res) => {
 
       const record = await mdb.findOne("onboarding", query);
       if (datatmp.active == "Yes") {
-        let subject = "C-GASP Screener Service Registeration";
+        let subject = "Your C-GASP Screener Registeration Approved";
         const pass = 'CsmaTraker1999';
         const surveylink = `https://airwayassessment.azurewebsites.net/qrcode?cid=${record.clinic_id}`
-        const body = `Here's link to generate C-GASP Screener and view survey results :<br/><a href="${surveylink}">${surveylink}</a>`;
+        const body = `Bookmark this link. This will take you to your C-GASP Screener form generator where you can generate the C-GASP eforms for your patients and view the results :<br/><a href="${surveylink}">${surveylink}</a>`;
         await send365Email('CSMA-Tracker@csma.clinic', [record.email.toLowerCase()], subject, body, "Rest Tracker Report", pass, null);
       }
 
@@ -271,8 +271,7 @@ app.post('/clinic-list', async (req, res) => {
     case 'remove':
 
       firstKey = Object.keys(data)[0];
-      newvalues = data[firstKey];
-      query = { 'clinic_id': newvalues.clinic_id };
+      query = { '_id': new ObjectId(firstKey) };
       result = await mdb.deleteOne("onboarding", query);
       res.send(templateTData)
       break;
