@@ -140,6 +140,12 @@ const json = {
         "name": "why_hard",
         "visibleIf": "{rating} = hard",
         "title": "If Hard Why? "
+       },
+       {
+        "type": "expression",
+        "name": "question1",
+        "visibleIf": "{main_questions.1} = 'yes' or {main_questions.2} = 'yes' or\n{main_questions.3} = 'yes' or\n{main_questions.4} = 'yes'  or\n{main_questions.5} = 'yes' ",
+        "title": "Your child may be at risk, to evaluate with more details, please click Next "
        }
       ]
      },
