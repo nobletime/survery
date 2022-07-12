@@ -34,7 +34,7 @@
               <h5 data-bind="css: css.description" class="sd-description">
                 <!-- ko template: { name: 'survey-string', data: locDescription } -->
               <!-- ko component: { name: renderAs, params: { locString: renderAsData } } --><!-- ko ifnot: locString.koHasHtml -->
-          <span class="sv-string-viewer" data-bind="text: locString.koRenderedHtml">Children’s General Airway Screening Protocol. Developed by the <br/>Children’s Airway Screener Taskforce (CAST) committee of the ADA</span>
+          <span class="sv-string-viewer" data-bind="text: locString.koRenderedHtml">Children’s General Airway Screening Protocol. Developed by the <br/>Children’s Airway Screener Taskforce (CAST) sanctioned by the ADA to create screening protocol for pediatric OSA</span>
           <!-- /ko -->
           <!-- ko if: locString.koHasHtml --><!-- /ko --><!-- /ko -->
           <!-- /ko -->
@@ -49,7 +49,7 @@
 
 
         <br>
-        <h3>The following information was also sent to <span id="pemail"><%=pemail%></span></h3>
+        <h3>Please forward the link below to the patient (it also sent to <span id="pemail"><%=pemail%></span>)</h3>
         <br/> <br/>
         <label for="link">C-GASP Screener eform: </label>
         <input id="link" type="text" value=<%=url%> style="width:700px;height:40px;margin-bottom:40px;font-size:16px">
